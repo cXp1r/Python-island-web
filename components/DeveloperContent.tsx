@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useEffect, useRef, useCallback } from 'react';
 import stylesEffect from '@/styles/effect.module.css';
+import stylesDock from '@/styles/dock.module.css';
 import type { ViewState, Phase, Developer } from './types';
 
 const developers: Developer[] = [
@@ -141,6 +143,55 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
 
   const dev = developers[currentDev];
   const dockDev = dockAvatars[currentDev];
+
+  // ── Dock magnify effect ──────────────────────────────────────────────────
+  const dockContainerRef = useRef<HTMLDivElement>(null);
+  const dockScales = useRef<number[]>(dockAvatars.map((_, i) => (i === currentDev ? 1.25 : 1.0)));
+  const dockBounce = useRef<boolean[]>(dockAvatars.map(() => false));
+  const [, forceUpdate] = useState(0);
+  const lastMouseX = useRef<number | null>(null);
+  /** Index of the item the mouse is directly over */
+  const hoveredIdx = useRef<number | null>(null);
+
+  const ITEM_W = 62; // icon width (52) + gap (10)
+  const MAX_SCALE = 1.25;
+  const NEIGHBOR_SCALE_STEPS = [1.12, 1.06, 1.0];
+
+  const handleDockMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const container = dockContainerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+
+    // First item center
+    const firstCenter = 14 + 26; // padding + half icon
+    const idx = Math.round((mouseX - firstCenter) / ITEM_W);
+    const clampedIdx = Math.max(0, Math.min(dockAvatars.length - 1, idx));
+
+    const newScales = dockAvatars.map((_, i) => {
+      const dist = Math.abs(i - clampedIdx);
+      if (i === currentDev) return MAX_SCALE;
+      if (dist === 0) return MAX_SCALE;
+      if (dist <= NEIGHBOR_SCALE_STEPS.length) return NEIGHBOR_SCALE_STEPS[dist - 1];
+      return 1.0;
+    });
+
+    if (JSON.stringify(newScales) !== JSON.stringify(dockScales.current)) {
+      dockScales.current = newScales;
+      forceUpdate(n => n + 1);
+    }
+
+    hoveredIdx.current = clampedIdx;
+    lastMouseX.current = mouseX;
+  }, [currentDev]);
+
+  const handleDockMouseLeave = useCallback(() => {
+    dockScales.current = dockAvatars.map((_, i) => (i === currentDev ? MAX_SCALE : 1.0));
+    forceUpdate(n => n + 1);
+    hoveredIdx.current = null;
+    lastMouseX.current = null;
+  }, [currentDev]);
 
   return (
     <div
@@ -479,84 +530,142 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
       </div>
 
       {/* macOS Dock with developer avatars */}
+      {/*
+        Magnify logic:
+        - Each avatar tracks its own scale via per-item refs updated on mouse-move.
+        - Active item: always 1.25 scale + lifts 6px.
+        - Hovered item: scales up to 1.20 + lifts 10px.
+        - Neighbors: scale gradually based on distance (1–3 steps away).
+        - On click: triggers a CSS bounce keyframe animation.
+      */}
       <div
+        ref={dockContainerRef}
+        onMouseMove={handleDockMouseMove}
+        onMouseLeave={handleDockMouseLeave}
         style={{
           position: 'absolute',
-          bottom: '8px',
+          bottom: '6px',
           left: '50%',
           transform: `translateX(-50%) translateY(${(1 - slideInFactor) * 30}px)`,
           opacity: slideInFactor,
           transition: 'transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s, opacity 0.7s ease 0.4s',
-          background: 'rgba(255,255,255,0.18)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          borderRadius: '18px',
-          border: '1px solid rgba(255,255,255,0.25)',
-          padding: '6px 10px',
+          background: 'rgba(255,255,255,0.12)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+          borderRadius: '20px',
+          border: '1px solid rgba(255,255,255,0.22)',
+          padding: '8px 14px',
           display: 'flex',
           alignItems: 'flex-end',
-          gap: '8px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+          gap: '10px',
+          boxShadow: '0 16px 64px rgba(0,0,0,0.45), 0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
           zIndex: 10,
+          userSelect: 'none',
         }}
       >
-        {dockAvatars.map((dock, i) => (
-          <div
-            key={dock.id}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '4px',
-            }}
-          >
+        {dockAvatars.map((dock, i) => {
+          const scale = dockScales.current[i] ?? (i === currentDev ? 1.25 : 1.0);
+          const lift = i === currentDev ? -6 : (scale > 1 ? -Math.round((scale - 1) * 40) : 0);
+          return (
             <div
-              title={dock.name}
-              onClick={() => onSwitchDev(i)}
+              key={dock.id}
               style={{
-                width: '52px',
-                height: '52px',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                cursor: 'pointer',
-                border: i === currentDev ? '2px solid white' : '2px solid transparent',
-                boxShadow: i === currentDev
-                  ? '0 0 0 2px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.3)'
-                  : '0 2px 8px rgba(0,0,0,0.2)',
-                transform: i === currentDev ? 'scale(1.15) translateY(-4px)' : 'scale(1)',
-                transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border 0.2s ease, box-shadow 0.2s ease',
-              }}
-              onMouseEnter={e => {
-                if (i !== currentDev) e.currentTarget.style.transform = 'translateY(-8px) scale(1.1)';
-              }}
-              onMouseLeave={e => {
-                if (i !== currentDev) e.currentTarget.style.transform = 'scale(1)';
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '5px',
+                position: 'relative',
               }}
             >
-              <img
-                src={dock.avatar}
-                alt={dock.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              {/* Name tooltip */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%) translateY(-6px)',
+                  background: 'rgba(30,30,30,0.88)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  color: 'rgba(255,255,255,0.95)',
+                  fontSize: '11px',
+                  fontWeight: '600',
+                  padding: '5px 10px',
+                  borderRadius: '8px',
+                  whiteSpace: 'nowrap',
+                  opacity: hoveredIdx.current === i ? 1 : 0,
+                  pointerEvents: 'none',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  transition: 'opacity 0.15s ease',
+                  letterSpacing: '0.01em',
+                }}
+              >
+                {dock.name}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '5px solid transparent',
+                    borderRight: '5px solid transparent',
+                    borderTop: '5px solid rgba(30,30,30,0.88)',
+                  }}
+                />
+              </div>
+
+              {/* Avatar icon */}
+              <div
+                title={dock.name}
+                onClick={() => onSwitchDev(i)}
+                className={dockBounce.current[i] ? stylesDock.bounce : ''}
+                style={{
+                  width: `${52 * scale}px`,
+                  height: `${52 * scale}px`,
+                  borderRadius: `${Math.round(12 * scale)}px`,
+                  overflow: 'hidden',
+                  cursor: 'pointer',
+                  border: `2px solid ${i === currentDev ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.15)'}`,
+                  boxShadow: i === currentDev
+                    ? '0 0 0 3px rgba(255,255,255,0.15), 0 8px 20px rgba(0,0,0,0.35)'
+                    : scale > 1.05
+                      ? `0 ${12 - scale * 3}px ${24 - scale * 6}px rgba(0,0,0,${0.3 + (scale - 1) * 0.5}), 0 0 ${Math.round((scale - 1) * 30)}px rgba(255,255,255,0.12)`
+                      : '0 3px 10px rgba(0,0,0,0.25)',
+                  transform: `translateY(${lift}px) scale(1)`,
+                  transition: i === currentDev
+                    ? 'width 0.2s cubic-bezier(0.34,1.56,0.64,1), height 0.2s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.2s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s ease, box-shadow 0.2s ease'
+                    : 'width 0.18s cubic-bezier(0.34,1.56,0.64,1), height 0.18s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.18s cubic-bezier(0.34,1.56,0.64,1), border-color 0.18s ease, box-shadow 0.18s ease',
+                }}
+                onAnimationEnd={() => {
+                  if (dockBounce.current[i]) {
+                    dockBounce.current[i] = false;
+                    forceUpdate(n => n + 1);
+                  }
+                }}
+              >
+                <img
+                  src={dock.avatar}
+                  alt={dock.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+
+              {/* Active indicator dot */}
+              <div
+                style={{
+                  width: i === currentDev ? '5px' : '3px',
+                  height: i === currentDev ? '5px' : '3px',
+                  borderRadius: '50%',
+                  background: i === currentDev ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.3)',
+                  boxShadow: i === currentDev ? '0 0 4px rgba(255,255,255,0.6)' : 'none',
+                  transition: 'width 0.25s cubic-bezier(0.34,1.56,0.64,1), height 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease, box-shadow 0.2s ease',
+                }}
               />
             </div>
-            <span
-              style={{
-                fontSize: '9px',
-                color: i === currentDev ? '#fff' : 'rgba(255,255,255,0.6)',
-                fontWeight: i === currentDev ? '700' : '400',
-                letterSpacing: '0.02em',
-                whiteSpace: 'nowrap',
-                maxWidth: '52px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                textAlign: 'center',
-                transition: 'color 0.2s ease, font-weight 0.2s ease',
-              }}
-            >
-              {dock.dockLabel}
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
