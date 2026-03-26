@@ -52,11 +52,11 @@ export default function DynamicIsland() {
             inset: '-2px',
             borderRadius: '32px',
             background: 'transparent',
-            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
+            boxShadow: '0 0 0 1px rgba(113, 113, 122, 0.12), 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15)',
             transform: isHovered ? 'scaleX(1.02)' : 'scaleX(1)',
             transition: 'box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
             ...(isHovered && {
-              boxShadow: '0 6px 32px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0 0 0 1px rgba(113, 113, 122, 0.18), 0 12px 48px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.2)',
             }),
           }}
         />
@@ -93,7 +93,7 @@ export default function DynamicIsland() {
             }}
             aria-label="Pyisland 首页"
           >
-            <img src="/island_w.svg" alt="" style={{ width: '22px', height: '22px', flexShrink: 0 }} />
+            <img src="/island_w.svg" alt="" style={{ width: '20px', height: '20px', flexShrink: 0 }} />
             <span
               style={{
                 fontSize: '14px',
