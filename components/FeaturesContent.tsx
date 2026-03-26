@@ -61,7 +61,7 @@ function FeatureCard({ icon: Icon, title, description, slideIn, delay }: {
   delay: number;
 }) {
   const cardOpacity = slideIn;
-  const transitionDelay = `${delay * 80}ms`;
+  const transitionDelay = `${Math.min(delay, 2) * 80}ms`;
 
   return (
     <div
@@ -163,85 +163,91 @@ export default function FeaturesContent({ progress, activeView, phase }: Feature
     >
       <div
         style={{
-          width: '110%',
-          maxWidth: '1500px',
+          width: '100%',
+          maxWidth: '1200px',
           padding: '0 clamp(20px, 5vw, 60px)',
           display: 'grid',
-          gridTemplateColumns: '1fr 320px 1fr',
-          gap: '240px',
+          gridTemplateColumns: '1fr 220px 1fr',
+          gap: '0px',
           alignItems: 'center',
         }}
       >
-        {/* Left column */}
+        {/* Left column — 3 cards stacked */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '16px',
-            transform: `translateX(${(1 - slideInFactor) * -60}px)`,
-            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s, opacity 0.6s ease',
+            gap: '14px',
+            transform: `translateX(${(1 - slideInFactor) * -40}px)`,
             opacity: slideInFactor,
+            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease',
+            paddingRight: '130px',
           }}
         >
-          <FeatureCard {...features[0]} slideIn={slideInFactor} delay={0} />
-          <FeatureCard {...features[1]} slideIn={slideInFactor} delay={1} />
-          <FeatureCard {...features[2]} slideIn={slideInFactor} delay={2} />
+          {features.slice(0, 3).map((feature, i) => (
+            <FeatureCard
+              key={feature.title}
+              {...feature}
+              slideIn={slideInFactor}
+              delay={i}
+            />
+          ))}
         </div>
 
-        {/* Center */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div
+        {/* Center — title */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '12px',
+            transform: `translateY(${(1 - slideInFactor) * 30}px)`,
+            opacity: slideInFactor,
+            transition: 'transform 0.7s ease, opacity 0.7s ease',
+          }}
+        >
+          <span
+            className={stylesEffect.gradientText}
             style={{
-              width: '280px',
-              height: '280px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: `translateY(${(1 - slideInFactor) * 100}px)`,
-              opacity,
-              transition: 'transform 0.8s ease, opacity 0.8s ease',
+              fontSize: '28px',
+              fontWeight: '600',
+              letterSpacing: '-0.02em',
             }}
           >
-            <span
-              className={stylesEffect.gradientText}
-              style={{
-                fontSize: '28px',
-                fontWeight: '600',
-                letterSpacing: '-0.02em',
-                marginBottom: '12px',
-              }}
-            >
-              核心功能
-            </span>
-            <p
-              style={{
-                fontSize: '14px',
-                color: '#86868B',
-                textAlign: 'center',
-                lineHeight: 1.6,
-                maxWidth: '200px',
-              }}
-            >
-              每一个细节都为 Windows 用户精心打造
-            </p>
-          </div>
+            核心功能
+          </span>
+          <p
+            style={{
+              fontSize: '13px',
+              color: '#86868B',
+              textAlign: 'center',
+              lineHeight: 1.6,
+            }}
+          >
+            每一个细节都为<br />Windows 用户精心打造
+          </p>
         </div>
 
-        {/* Right column */}
+        {/* Right column — 3 cards stacked */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '16px',
-            transform: `translateX(${(1 - slideInFactor) * 60}px)`,
-            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s, opacity 0.6s ease',
+            gap: '14px',
+            transform: `translateX(${(1 - slideInFactor) * 40}px)`,
             opacity: slideInFactor,
+            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease',
+            paddingLeft: '130px',
           }}
         >
-          <FeatureCard {...features[3]} slideIn={slideInFactor} delay={0} />
-          <FeatureCard {...features[4]} slideIn={slideInFactor} delay={1} />
-          <FeatureCard {...features[5]} slideIn={slideInFactor} delay={2} />
+          {features.slice(3, 6).map((feature, i) => (
+            <FeatureCard
+              key={feature.title}
+              {...feature}
+              slideIn={slideInFactor}
+              delay={i}
+            />
+          ))}
         </div>
       </div>
     </div>
