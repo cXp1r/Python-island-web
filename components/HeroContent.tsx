@@ -14,6 +14,7 @@ interface HeroContentProps {
 export default function HeroContent({ threeRef, transitionProgress, view }: HeroContentProps) {
   return (
     <div
+      id="hero"
       style={{
         position: 'absolute',
         inset: 0,

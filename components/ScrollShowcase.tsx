@@ -81,6 +81,29 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
     }
   }, [view]);
 
+  // Sync URL hash with current view
+  useEffect(() => {
+    const hash = view === 'features' ? '#features' : '#hero';
+    if (window.location.hash !== hash) {
+      history.replaceState(null, '', window.location.pathname + hash);
+    }
+  }, [view]);
+
+  // React to navigation events (e.g. clicking nav links in DynamicIsland)
+  useEffect(() => {
+    const handleNavigate = (e: Event) => {
+      const hash = (e as CustomEvent<{ hash: string }>).detail.hash;
+      if (hash === '#features' && view !== 'features') {
+        handleTransition('down');
+      } else if (hash === '#hero' && view !== 'hero') {
+        handleTransition('up');
+      }
+    };
+
+    window.addEventListener('pyisland:navigate', handleNavigate);
+    return () => window.removeEventListener('pyisland:navigate', handleNavigate);
+  }, [view, handleTransition]);
+
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();

@@ -1,13 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useCallback } from 'react';
 import { Github } from 'lucide-react';
 
 export default function DynamicIsland() {
   const [isHovered, setIsHovered] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const navigate = useCallback((hash: string) => {
+    history.pushState(null, '', window.location.pathname + hash);
+    window.dispatchEvent(new CustomEvent('pyisland:navigate', { detail: { hash } }));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,8 +85,8 @@ export default function DynamicIsland() {
           }}
         >
           {/* Left logo */}
-          <Link
-            href="/"
+          <button
+            onClick={() => navigate('#hero')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -90,6 +94,9 @@ export default function DynamicIsland() {
               textDecoration: 'none',
               cursor: 'pointer',
               flexShrink: 0,
+              background: 'none',
+              border: 'none',
+              padding: 0,
             }}
             aria-label="Pyisland 首页"
           >
@@ -104,7 +111,7 @@ export default function DynamicIsland() {
             >
               Pyisland
             </span>
-          </Link>
+          </button>
 
           {/* Divider */}
           <div
@@ -119,36 +126,31 @@ export default function DynamicIsland() {
 
           {/* Nav links */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-            {[
-              { href: '/features', label: '功能' },
-              { href: '/developers', label: '开发者' },
-              { href: '/download', label: '下载' },
-            ].map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                style={{
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: '500',
-                  color: '#71717a',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s ease, background 0.2s ease',
-                  cursor: 'pointer',
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLElement).style.color = '#fafafa';
-                  (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.08)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.color = '#71717a';
-                  (e.target as HTMLElement).style.background = 'transparent';
-                }}
-              >
-                {label}
-              </Link>
-            ))}
+            <button
+              onClick={() => navigate('#features')}
+              style={{
+                padding: '4px 10px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: '500',
+                color: '#71717a',
+                textDecoration: 'none',
+                transition: 'color 0.2s ease, background 0.2s ease',
+                cursor: 'pointer',
+                background: 'none',
+                border: 'none',
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLElement).style.color = '#fafafa';
+                (e.target as HTMLElement).style.background = 'rgba(255, 255, 255, 0.08)';
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLElement).style.color = '#71717a';
+                (e.target as HTMLElement).style.background = 'transparent';
+              }}
+            >
+              功能
+            </button>
           </div>
 
           {/* Divider */}
