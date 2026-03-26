@@ -305,7 +305,7 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
               textTransform: 'uppercase',
             }}
           >
-            Introducing
+            Windows Dynamic Island
           </span>
 
           <h1
