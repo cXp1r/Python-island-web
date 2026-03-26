@@ -198,11 +198,11 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
         {/* Title above screen */}
         <div
           style={{
-            marginBottom: 'clamp(16px, 3vh, 28px)',
+            marginBottom: 'clamp(40px, 4vh, 36px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '8px',
+            gap: '10px',
             transform: `translateY(${(1 - slideInFactor) * -20}px)`,
             opacity: slideInFactor,
             transition: 'transform 0.7s ease, opacity 0.7s ease',
@@ -210,11 +210,11 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
         >
           <span
             className={stylesEffect.gradientText}
-            style={{ fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: '600', letterSpacing: '-0.02em' }}
+            style={{ fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: '600', letterSpacing: '-0.02em' }}
           >
             开发指南
           </span>
-          <p style={{ fontSize: '13px', color: '#86868B', textAlign: 'center', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '14px', color: '#86868B', textAlign: 'center', lineHeight: 1.6 }}>
             基于 PySide6 · 完整 API · 插件系统
           </p>
         </div>
@@ -235,7 +235,7 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
           {/* Window title bar */}
           <div
             style={{
-              padding: '12px 16px',
+              padding: '16px 16px',
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
@@ -244,13 +244,13 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
             }}
           >
             {['#FF5F57', '#FEBC2E', '#28C840'].map(c => (
-              <div key={c} style={{ width: '11px', height: '11px', borderRadius: '50%', background: c }} />
+              <div key={c} style={{ width: '12px', height: '12px', borderRadius: '50%', background: c }} />
             ))}
             <span
               style={{
                 marginLeft: 'auto',
                 marginRight: 'auto',
-                fontSize: '12px',
+                fontSize: '13px',
                 color: '#86868B',
                 fontWeight: '500',
                 letterSpacing: '0.02em',
