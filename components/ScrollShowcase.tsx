@@ -242,6 +242,7 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
         overflow: 'hidden',
         position: 'relative',
         background: '#FFFFFF',
+        userSelect: 'none',
       }}
     >
       {/* Layer 1: Subtle gradient background */}
