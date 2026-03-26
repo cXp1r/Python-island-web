@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { Github } from 'lucide-react';
 
-type NavPage = '#hero' | '#features' | '#branches';
+type NavPage = '#hero' | '#features' | '#branches' | '#developers';
 
-const NAV_ORDER: NavPage[] = ['#hero', '#features', '#branches'];
+const NAV_ORDER: NavPage[] = ['#hero', '#features', '#branches', '#developers'];
 
 export default function DynamicIsland() {
   const [isHovered, setIsHovered] = useState(false);
@@ -14,6 +14,7 @@ export default function DynamicIsland() {
   const [activePage, setActivePage] = useState<NavPage>('#hero');
   const featuresBtnRef = useRef<HTMLButtonElement>(null);
   const branchesBtnRef = useRef<HTMLButtonElement>(null);
+  const developersBtnRef = useRef<HTMLButtonElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const navigate = useCallback((hash: string) => {
@@ -85,6 +86,12 @@ export default function DynamicIsland() {
         setIndicatorStyle({
           left: branchesBtnRef.current.offsetLeft + 6,
           width: branchesBtnRef.current.offsetWidth - 12,
+          opacity: 1,
+        });
+      } else if (activePage === '#developers' && developersBtnRef.current) {
+        setIndicatorStyle({
+          left: developersBtnRef.current.offsetLeft + 6,
+          width: developersBtnRef.current.offsetWidth - 12,
           opacity: 1,
         });
       } else {
@@ -246,6 +253,24 @@ export default function DynamicIsland() {
               className="diNavBtn"
             >
               分支
+            </button>
+            <button
+              ref={developersBtnRef}
+              onClick={() => navigate('#developers')}
+              style={{
+                padding: '4px 10px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: '500',
+                color: activePage === '#developers' ? '#ffffff' : '#71717a',
+                transition: 'color 0.2s ease',
+                cursor: 'pointer',
+                background: 'none',
+                border: 'none',
+              }}
+              className="diNavBtn"
+            >
+              开发者
             </button>
             {/* Active indicator underline — lives between both buttons so it can animate between them */}
             <div
