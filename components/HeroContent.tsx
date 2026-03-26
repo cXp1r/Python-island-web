@@ -4,9 +4,7 @@ import { Download, Github } from 'lucide-react';
 import stylesButton from '@/styles/button.module.css';
 import stylesTypography from '@/styles/typography.module.css';
 import stylesEffect from '@/styles/effect.module.css';
-
-type ViewState = 'hero' | 'features' | 'branches';
-type Phase = 'idle' | 'transitioning';
+import type { ViewState, Phase } from './types';
 
 interface HeroContentProps {
   threeRef: { current: { setHover: (val: boolean) => void } | null };

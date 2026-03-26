@@ -4,27 +4,27 @@ import { useState, useRef, useEffect, useCallback, ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { ComponentType } from 'react';
 import type { ThreeSceneHandle } from './ThreeScene';
+import type { ViewState, Phase } from './types';
 import HeroContent from './HeroContent';
 import ScrollIndicator from './ScrollIndicator';
 import FeaturesContent from './FeaturesContent';
 import BranchesContent from './BranchesContent';
+import DeveloperContent from './DeveloperContent';
 
 const ThreeScene = dynamic(
   () => import('./ThreeScene').then(m => m.ThreeSceneInner),
   { ssr: false }
 ) as ComponentType<{ ref?: React.Ref<ThreeSceneHandle> }>;
 
-type ViewState = 'hero' | 'features' | 'branches';
-
 const VIEW_TARGET: Record<ViewState, number> = {
   hero: 0,
-  features: 0.5,
-  branches: 1,
+  features: 0.33,
+  branches: 0.67,
+  developers: 1,
 };
 
 const DURATION = 800;
 
-type Phase = 'idle' | 'transitioning';
 interface PhaseState {
   phase: Phase;
   targetView: ViewState;
@@ -32,15 +32,16 @@ interface PhaseState {
 
 interface ScrollShowcaseProps {
   children?: ReactNode;
+  initialView?: ViewState;
 }
 
-export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
+export default function ScrollShowcase({ children, initialView = 'hero' }: ScrollShowcaseProps) {
   /** Stable view after animation completes */
-  const [view, setView] = useState<ViewState>('hero');
+  const [view, setView] = useState<ViewState>(initialView);
   /** Phase + target during transition */
-  const [phaseState, setPhaseState] = useState<PhaseState>({ phase: 'idle', targetView: 'hero' });
+  const [phaseState, setPhaseState] = useState<PhaseState>({ phase: 'idle', targetView: initialView });
   /** Local progress 0→1 for CSS animations */
-  const [progress, setProgress] = useState(1);
+  const [progress, setProgress] = useState(initialView === 'hero' ? 1 : 1);
 
   const threeRef = useRef<ThreeSceneHandle>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,7 +57,8 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
     const nextViewMap: Record<ViewState, ViewState | null> = {
       hero: direction === 'down' ? 'features' : null,
       features: direction === 'down' ? 'branches' : 'hero',
-      branches: direction === 'up' ? 'features' : null,
+      branches: direction === 'down' ? 'developers' : 'features',
+      developers: direction === 'up' ? 'branches' : null,
     };
 
     const nextView = nextViewMap[view];
@@ -113,6 +115,15 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
       window.dispatchEvent(new CustomEvent('pyisland:navigate', { detail: { hash } }));
     }
   }, [activeView]);
+
+  // Initialize Three.js to initialView on mount
+  useEffect(() => {
+    if (initialView !== 'hero' && threeRef.current) {
+      const target = VIEW_TARGET[initialView];
+      threeRef.current.setViewTarget(target);
+      threeRef.current.setTransition(target);
+    }
+  }, []); // run once on mount
 
   // Direct cross-page navigation — handles any target jump
   const navigateTo = useCallback((target: ViewState) => {
@@ -257,6 +268,13 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
       />
 
       {/* Back button */}
+
+      {/* Developers */}
+      <DeveloperContent
+        progress={progress}
+        activeView={activeView}
+        phase={phaseState.phase}
+      />
     </div>
   );
 }

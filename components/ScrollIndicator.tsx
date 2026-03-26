@@ -1,6 +1,6 @@
 'use client';
 
-type ViewState = 'hero' | 'features' | 'branches';
+import type { ViewState } from './types';
 
 interface ScrollIndicatorProps {
   activeView: ViewState;

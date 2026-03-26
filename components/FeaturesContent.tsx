@@ -10,9 +10,7 @@ import {
 } from 'lucide-react';
 import stylesGlass from '@/styles/glass.module.css';
 import stylesEffect from '@/styles/effect.module.css';
-
-type ViewState = 'hero' | 'features' | 'branches';
-type Phase = 'idle' | 'transitioning';
+import type { ViewState, Phase } from './types';
 
 const features = [
   {

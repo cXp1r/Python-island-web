@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Footer from '@/components/Footer';
+import DevelopersPageClient from './DevelopersPageClient';
 
 export const metadata: Metadata = {
   title: '开发者 | Pyisland',
@@ -7,10 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Developers() {
-  return (
-    <main>
-      <div style={{ minHeight: '100vh' }} />
-      <Footer />
-    </main>
-  );
+  return <DevelopersPageClient />;
 }

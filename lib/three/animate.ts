@@ -157,12 +157,15 @@ function animateIslandGroup(
 
   // Rotation
   let targetRotationZ: number;
-  if (refValue <= 0.5) {
-    const t = refValue * 2;
+  if (refValue <= 0.33) {
+    const t = refValue / 0.33;
     targetRotationZ = lerp(Math.PI / 2, 0, 1 - Math.pow(1 - t, 3));
-  } else {
-    const t = (refValue - 0.5) * 2;
+  } else if (refValue <= 0.67) {
+    const t = (refValue - 0.33) / 0.34;
     targetRotationZ = lerp(0, -Math.PI / 2, 1 - Math.pow(1 - t, 3));
+  } else {
+    const t = (refValue - 0.67) / 0.33;
+    targetRotationZ = lerp(-Math.PI / 2, -Math.PI, 1 - Math.pow(1 - t, 3));
   }
   islandGroup.rotation.z += (targetRotationZ - islandGroup.rotation.z) * 0.08;
 
@@ -173,12 +176,15 @@ function animateIslandGroup(
   const baseScale = breathScale * state.hoverState.current;
 
   let transitionScale: number;
-  if (refValue <= 0.5) {
-    const t = refValue * 2;
+  if (refValue <= 0.33) {
+    const t = refValue / 0.33;
     transitionScale = lerp(1, 0.64, 1 - Math.pow(1 - t, 3));
-  } else {
-    const t = (refValue - 0.5) * 2;
+  } else if (refValue <= 0.67) {
+    const t = (refValue - 0.33) / 0.34;
     transitionScale = lerp(0.64, 0.195, 1 - Math.pow(1 - t, 3));
+  } else {
+    const t = (refValue - 0.67) / 0.33;
+    transitionScale = lerp(0.195, 0.10, 1 - Math.pow(1 - t, 3));
   }
 
   pill.scale.setScalar(baseScale * transitionScale);

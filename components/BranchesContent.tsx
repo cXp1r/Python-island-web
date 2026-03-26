@@ -2,9 +2,7 @@
 
 import stylesGlass from '@/styles/glass.module.css';
 import stylesEffect from '@/styles/effect.module.css';
-
-type ViewState = 'hero' | 'features' | 'branches';
-type Phase = 'idle' | 'transitioning';
+import type { ViewState, Phase } from './types';
 
 const branches = [
   {
@@ -183,8 +181,8 @@ export default function BranchesContent({ progress, activeView, phase }: Branche
   const isBranches = activeView === 'branches';
   const isTransitioning = phase === 'transitioning';
 
-  // Slide-out: when transitioning branches→features (progress 0→1), branches should fade out
-  const slideOut = isTransitioning && activeView === 'features' ? progress : 0;
+  // Slide-out: when transitioning branches→developers (progress 0→1), branches fades out
+  const slideOut = isTransitioning && activeView === 'developers' ? progress : 0;
 
   const opacity = isBranches ? Math.max(0, 1 - slideOut) : 0;
   const slideInFactor = isBranches ? 1 : 0;
