@@ -155,7 +155,19 @@ function animateIslandGroup(
   // takes ~0.625s — same as the original Hero→Features speed.
   const refValue = refs.transitionState.current;
 
-  // Rotation
+  // Transition position — third segment moves island up instead of rotating
+  let targetPosY: number;
+  if (refValue <= 0.33) {
+    targetPosY = 0;
+  } else if (refValue <= 0.67) {
+    targetPosY = 0;
+  } else {
+    const t = (refValue - 0.67) / 0.33;
+    targetPosY = lerp(0, 0.6, 1 - Math.pow(1 - t, 3));
+  }
+  islandGroup.position.y += (targetPosY - islandGroup.position.y) * 0.08;
+
+  // Rotation — third segment stays at -PI/2 (no further rotation)
   let targetRotationZ: number;
   if (refValue <= 0.33) {
     const t = refValue / 0.33;
@@ -164,8 +176,7 @@ function animateIslandGroup(
     const t = (refValue - 0.33) / 0.34;
     targetRotationZ = lerp(0, -Math.PI / 2, 1 - Math.pow(1 - t, 3));
   } else {
-    const t = (refValue - 0.67) / 0.33;
-    targetRotationZ = lerp(-Math.PI / 2, -Math.PI, 1 - Math.pow(1 - t, 3));
+    targetRotationZ = -Math.PI / 2;
   }
   islandGroup.rotation.z += (targetRotationZ - islandGroup.rotation.z) * 0.08;
 
