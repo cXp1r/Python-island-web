@@ -124,7 +124,7 @@ function animateIslandGroup(
   transition: number
 ): void {
   const { islandGroup, pill, glow, outerGlowLayers } = elements;
-  const { mouse, hoverRef, transitionRef } = refs;
+  const { mouse, hoverRef } = refs;
   const { animation } = SCENE_CONFIG;
 
   // Reduce floating during transition
@@ -141,14 +141,11 @@ function animateIslandGroup(
   islandGroup.rotation.x += (mouseTiltX - islandGroup.rotation.x) * animation.mouseTiltSmoothing;
   islandGroup.rotation.y += (mouseTiltY - islandGroup.rotation.y) * animation.mouseTiltSmoothing;
 
-  // ── Both rotation and scale use transitionRef (React eased value 0→1).
-  // This ensures rotation and scale animate at exactly the same speed,
-  // consistent with the original hero→features animation.
-  //
-  // Ref value ranges:
-  //   Hero→Features: transitionRef 0→0.5,  rotation PI/2→0, scale 1→0.64
-  //   Features→Branches: transitionRef 0.5→1, rotation 0→-PI/2, scale 0.64→0.55
-  const refValue = transitionRef.current;
+  // ── Both rotation and scale use transitionState.current.
+  // This is the value smoothly tracked by Three.js (factor=0.08)
+  // from transitionRef (React eased value). Result: each 90° rotation
+  // takes ~0.625s — same as the original Hero→Features speed.
+  const refValue = refs.transitionState.current;
 
   // Rotation
   let targetRotationZ: number;
