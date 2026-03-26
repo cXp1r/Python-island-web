@@ -1,119 +1,153 @@
 'use client';
 
-import stylesGlass from '@/styles/glass.module.css';
 import stylesEffect from '@/styles/effect.module.css';
-import type { ViewState, Phase } from './types';
+import type { ViewState, Phase, Developer } from './types';
 
-const codeSnippets = [
+const developers: Developer[] = [
   {
-    lang: 'bash',
-    label: '安装',
-    code: 'pip install pyisland\n# 或 clone 源码\ngit clone https://github.com/Python-island/Python-island',
+    id: 'StarWindv',
+    name: '星灿长风v',
+    nameEn: 'StarWindv',
+    email: 'starwindv.stv@gmail.com',
+    bio: 'ISTP/INTP 社恐金牛 | 擅长使用 Py/Java/Rust/Ts | 喜欢花里胡哨的东西和更底层的原理 | 热衷于自己造轮子来进行学习',
+    traits: [
+      { icon: '🧩', label: 'ISTP / INTP', desc: '理性工匠 · 逻辑思考' },
+      { icon: '🔇', label: '社恐金牛', desc: '沉稳内敛 · 专注细节' },
+      { icon: '⚙️', label: '热衷造轮子', desc: '自己动手 · 深度学习' },
+      { icon: '🔬', label: '追求底层原理', desc: '知其然 · 更知其所以然' },
+    ],
+    skills: [
+      { label: 'Python', color: '#2563EB' },
+      { label: 'Java', color: '#DC2626' },
+      { label: 'Rust', color: '#D97706' },
+      { label: 'TypeScript', color: '#7C3AED' },
+      { label: 'PySide6', color: '#059669' },
+      { label: 'Qt', color: '#059669' },
+      { label: 'Tauri', color: '#D97706' },
+    ],
+    accent: '#FF9500',
   },
   {
-    lang: 'python',
-    label: '快速开始',
-    code: 'from pyisland import Island\n\nisland = Island()\nisland.on_click(lambda: print("点击了灵动岛"))\nisland.run()',
+    id: 'Code',
+    name: 'Code',
+    nameEn: 'Code',
+    email: '2064878930@qq.com',
+    bio: 'INTP 水瓶 | 擅长使用 Py/Java/Vue | 激进维新派 VibeCoding 中乐此不疲 | 樱花只开一季 真爱只有一次',
+    traits: [
+      { icon: '💡', label: 'INTP', desc: '逻辑学家 · 创新驱动' },
+      { icon: '🌸', label: '浪漫水瓶', desc: '理想主义 · 追求真爱' },
+      { icon: '⚡', label: 'VibeCoding', desc: '激进维新 · 乐此不疲' },
+      { icon: '🎨', label: '多语言开发', desc: 'Py / Java / Vue' },
+    ],
+    skills: [
+      { label: 'Python', color: '#2563EB' },
+      { label: 'Java', color: '#DC2626' },
+      { label: 'Vue', color: '#059669' },
+      { label: 'VibeCoding', color: '#7C3AED' },
+    ],
+    accent: '#3B82F6',
   },
   {
-    lang: 'python',
-    label: '自定义 UI',
-    code: 'island.set_brightness_control(enabled=True)\nisland.set_media_control(enabled=True)\nisland.set_rainbow_mode(enabled=True)',
+    id: 'silenthim',
+    name: 'silenthim',
+    nameEn: 'silenthim',
+    email: '2066889432@qq.com',
+    bio: '在校大学瘤子，鸡窝山软工の耻辱，精通 Python，C++，C，Java 各种语言输出 Hello World，一生只爱东北雨姐',
+    traits: [
+      { icon: '🎓', label: '在校大学生', desc: '鸡窝山软工' },
+      { icon: '💻', label: '多语言选手', desc: 'Python / C++ / C / Java' },
+      { icon: '😂', label: 'Hello World', desc: '精通各种语言入门' },
+      { icon: '💕', label: '一生真爱', desc: '东北雨姐' },
+    ],
+    skills: [
+      { label: 'Python', color: '#2563EB' },
+      { label: 'C++', color: '#00599C' },
+      { label: 'C', color: '#A8B9CC' },
+      { label: 'Java', color: '#DC2626' },
+    ],
+    accent: '#10B981',
+  },
+  {
+    id: 'GeminiMortal',
+    name: '双子座·凡尘',
+    nameEn: 'GeminiMortal',
+    email: '1468098941@qq.com',
+    bio: '社恐双子 · 多语言开发者 · 视觉系代码爱好者 · 希望从零手搓独立作品',
+    traits: [
+      { icon: '👤', label: 'INFJ / INFP / INTP', desc: '三重人格切换' },
+      { icon: '🔇', label: '社恐双子', desc: 'SUT 在校生' },
+      { icon: '🌈', label: '视觉系代码', desc: '花里胡哨的视觉效果' },
+      { icon: '🚀', label: '手搓独立作品', desc: '从零开始的创造者' },
+    ],
+    skills: [
+      { label: 'C++', color: '#00599C' },
+      { label: 'Python', color: '#2563EB' },
+      { label: 'Java', color: '#DC2626' },
+      { label: 'JavaScript', color: '#D97706' },
+    ],
+    accent: '#8B5CF6',
+  },
+  {
+    id: 'cXp1r',
+    name: 'cXp1r',
+    nameEn: 'cXp1r',
+    email: 'admin@cxp1r.com',
+    bio: '社恐小男孩，擅长摸鱼和提建议，喜欢将流程自动化，喜欢 C++ 和 Python',
+    traits: [
+      { icon: '😶', label: '社恐小男孩', desc: '安静但有想法' },
+      { icon: '🐟', label: '摸鱼达人', desc: '擅长摸鱼和提建议' },
+      { icon: '🤖', label: '流程自动化', desc: '将重复流程自动化' },
+      { icon: '⚡', label: 'C++ / Python', desc: '喜欢的两门语言' },
+    ],
+    skills: [
+      { label: 'C++', color: '#00599C' },
+      { label: 'Python', color: '#2563EB' },
+      { label: '自动化', color: '#D97706' },
+    ],
+    accent: '#EF4444',
   },
 ];
 
-function CodeCard({ snippet, slideIn }: { snippet: typeof codeSnippets[number]; slideIn: number }) {
-  const langColors: Record<string, string> = {
-    bash: '#71717a',
-    python: '#2563EB',
-    rust: '#D97706',
+const dockAvatars = developers.map(dev => {
+  const colors: Record<string, string> = {
+    StarWindv: 'linear-gradient(135deg, #FF9500, #FF6B00)',
+    Code: 'linear-gradient(135deg, #3B82F6, #1D4ED8)',
+    silenthim: 'linear-gradient(135deg, #10B981, #059669)',
+    GeminiMortal: 'linear-gradient(135deg, #8B5CF6, #6D28D9)',
+    cXp1r: 'linear-gradient(135deg, #EF4444, #B91C1C)',
   };
-  const color = langColors[snippet.lang] ?? '#86868B';
-
-  return (
-    <div
-      style={{
-        width: '260px',
-        flexShrink: 0,
-        background: 'rgba(255, 255, 255, 0.88)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(0, 0, 0, 0.06)',
-        borderRadius: '14px',
-        overflow: 'hidden',
-        transform: `translateY(${(1 - slideIn) * 30}px)`,
-        opacity: slideIn,
-        transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease, box-shadow 0.3s ease, border-color 0.3s ease',
-        boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06)',
-      }}
-    >
-      {/* Header */}
-      <div
-        style={{
-          padding: '10px 14px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
-          background: 'rgba(245, 245, 247, 0.6)',
-        }}
-      >
-        <div style={{ display: 'flex', gap: '5px' }}>
-          {['#FF5F57', '#FEBC2E', '#28C840'].map(c => (
-            <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
-          ))}
-        </div>
-        <span style={{ fontSize: '10px', color: '#86868B', fontWeight: '500', marginLeft: '4px' }}>
-          {snippet.label}
-        </span>
-        <span
-          style={{
-            marginLeft: 'auto',
-            fontSize: '9px',
-            color: color,
-            fontWeight: '600',
-            fontFamily: 'ui-monospace, monospace',
-            letterSpacing: '0.05em',
-          }}
-        >
-          {snippet.lang}
-        </span>
-      </div>
-      {/* Code body */}
-      <div style={{ padding: '14px 16px' }}>
-        <pre
-          style={{
-            margin: 0,
-            fontSize: '11px',
-            lineHeight: 1.7,
-            color: '#1D1D1F',
-            fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-all',
-          }}
-        >
-          {snippet.code}
-        </pre>
-      </div>
-    </div>
-  );
-}
+  const letters: Record<string, string> = {
+    StarWindv: 'S',
+    Code: 'C',
+    silenthim: 'S',
+    GeminiMortal: 'G',
+    cXp1r: 'C',
+  };
+  return {
+    ...dev,
+    gradient: colors[dev.id] ?? '#86868B',
+    letter: letters[dev.id] ?? dev.name[0],
+  };
+});
 
 interface DeveloperContentProps {
   progress: number;
   activeView: ViewState;
   phase: Phase;
+  currentDev: number;
+  onSwitchDev: (index: number) => void;
 }
 
-export default function DeveloperContent({ progress, activeView, phase }: DeveloperContentProps) {
+export default function DeveloperContent({ progress, activeView, phase, currentDev, onSwitchDev }: DeveloperContentProps) {
   const isDevelopers = activeView === 'developers';
   const isTransitioning = phase === 'transitioning';
 
-  // Slide-out: when transitioning developers→branches (progress 0→1), this view fades out
   const slideOut = isTransitioning && activeView === 'branches' ? progress : 0;
-
   const opacity = isDevelopers ? Math.max(0, 1 - slideOut) : 0;
   const slideInFactor = isDevelopers ? 1 : 0;
+
+  const dev = developers[currentDev];
+  const dockDev = dockAvatars[currentDev];
 
   return (
     <div
@@ -151,41 +185,35 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}
       >
-        {/* Apple logo */}
         <svg width="12" height="14" viewBox="0 0 12 14" fill="white" style={{ opacity: 0.9 }}>
           <path d="M9.5 10.5c0-1.5 1.2-2.2 1.2-3.1 0-.5-.4-.8-1-.8-.7 0-1.4.4-1.8 1l-.5-.6c.5-.7 1.3-1.1 2.3-1.1 1.4 0 2.3.8 2.3 2.1 0 1.4-1 2.4-1 3.5 0 .7.4 1.4 1.1 1.4.6 0 1-.4 1-.4l.4.5c-.1.1-.5.5-1.4.5-1.1 0-1.9-.8-1.9-2l.3-.1zm-4.5-.4c-.5-.6-1.3-.9-2-.9-.8 0-1.5.3-2 .9l.5.6c.4-.4.9-.6 1.5-.6.6 0 1.2.2 1.6.7l.4-.7zM8 0c2.2 0 4 1.8 4 4s-1.8 4-4 4-4-1.8-4-4S5.8 0 8 0zm0 7c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3z" />
         </svg>
-        {/* Active app */}
         <span style={{ fontSize: '12px', fontWeight: '600', color: 'white', letterSpacing: '0.01em' }}>
           Finder
         </span>
-        {/* Menu items */}
         {['文件', '编辑', '显示', '前往', '窗口', '帮助'].map(item => (
           <span key={item} style={{ fontSize: '12px', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.01em' }}>
             {item}
           </span>
         ))}
-        {/* Spacer */}
         <div style={{ flex: 1 }} />
-        {/* Status icons */}
         <svg width="14" height="10" viewBox="0 0 14 10" fill="rgba(255,255,255,0.85)">
           <path d="M1 4C1 2.9 1.9 2 3 2h8c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V4zm0-1L0 3v4l1-1h12l1 1V3l-1 0H1z" />
           <path d="M4 5h6M4 7h3" stroke="rgba(255,255,255,0.7)" strokeWidth="1" fill="none" />
         </svg>
         <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', letterSpacing: '0.01em' }}>▼</span>
         <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.85)' }}>100%</span>
-        {/* Clock */}
         <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.02em' }}>
           下午 3:42
         </span>
       </div>
 
-      {/* Screen / window container */}
+      {/* Main content container */}
       <div
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '900px',
+          maxWidth: '820px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -195,10 +223,10 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
           marginTop: '28px',
         }}
       >
-        {/* Title above screen */}
+        {/* Title */}
         <div
           style={{
-            marginBottom: 'clamp(40px, 4vh, 36px)',
+            marginBottom: 'clamp(20px, 4vh, 36px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -212,14 +240,14 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
             className={stylesEffect.gradientText}
             style={{ fontSize: 'clamp(22px, 3.5vw, 32px)', fontWeight: '600', letterSpacing: '-0.02em' }}
           >
-            开发指南
+            关于开发者
           </span>
           <p style={{ fontSize: '14px', color: '#86868B', textAlign: 'center', lineHeight: 1.6 }}>
-            基于 PySide6 · 完整 API · 插件系统
+            Python-island 项目团队
           </p>
         </div>
 
-        {/* Main screen window */}
+        {/* Profile card */}
         <div
           style={{
             width: '100%',
@@ -256,120 +284,195 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
                 letterSpacing: '0.02em',
               }}
             >
-              docs.pyisland.com — pyislandPyside6
+              About — {dev.nameEn}
             </span>
           </div>
 
-          {/* Window content */}
+          {/* Profile content */}
           <div
             style={{
-              padding: 'clamp(20px, 4vw, 40px)',
+              padding: 'clamp(24px, 4vw, 44px)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '24px',
+              gap: '28px',
             }}
           >
-            {/* Feature highlights */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: '12px',
-              }}
-            >
-              {[
-                { icon: '●', label: '核心功能', desc: '灵动岛胶囊、时间显示、控制面板' },
-                { icon: '◉', label: '系统控制', desc: '亮度调节、WiFi/蓝牙、电池监控' },
-                { icon: '○', label: '实用功能', desc: '剪贴板 URL 检测、快捷链接' },
-                { icon: '◈', label: '事件总线', desc: '异步事件驱动架构' },
-              ].map((item, i) => (
-                <div
-                  key={item.label}
-                  style={{
-                    padding: '12px 14px',
-                    background: 'rgba(0, 0, 0, 0.025)',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(0, 0, 0, 0.04)',
-                    transform: `translateY(${(1 - slideInFactor) * 16}px)`,
-                    opacity: slideInFactor,
-                    transition: `transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${i * 0.08}s, opacity 0.6s ease ${i * 0.08}s`,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '10px', color: '#86868B' }}>{item.icon}</span>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: '#1D1D1F' }}>{item.label}</span>
-                  </div>
-                  <p style={{ fontSize: '11px', color: '#86868B', lineHeight: 1.5, margin: 0 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Code snippets */}
-            <div
-              style={{
-                display: 'flex',
-                gap: '16px',
-                overflowX: 'auto',
-                paddingBottom: '4px',
-                transform: `translateY(${(1 - slideInFactor) * 20}px)`,
-                opacity: slideInFactor,
-                transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.2s, opacity 0.7s ease 0.2s',
-              }}
-            >
-              {codeSnippets.map((snippet, i) => (
-                <CodeCard key={snippet.label} snippet={snippet} slideIn={slideInFactor} />
-              ))}
-            </div>
-
-            {/* Bottom CTA */}
+            {/* Avatar + name + email */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '14px 16px',
+                gap: '20px',
+                transform: `translateY(${(1 - slideInFactor) * 16}px)`,
+                opacity: slideInFactor,
+                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease',
+              }}
+            >
+              {/* Avatar */}
+              <div
+                style={{
+                  width: '72px',
+                  height: '72px',
+                  borderRadius: '50%',
+                  background: dockDev.gradient,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  fontWeight: '700',
+                  color: 'white',
+                  boxShadow: `0 4px 16px ${dev.accent}40`,
+                  flexShrink: 0,
+                  border: '3px solid rgba(255,255,255,0.9)',
+                  fontFamily: 'ui-monospace, monospace',
+                }}
+              >
+                {dockDev.letter}
+              </div>
+              {/* Name & email */}
+              <div>
+                <h2
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: '700',
+                    color: '#1D1D1F',
+                    margin: '0 0 4px',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {dev.name}
+                </h2>
+                {dev.nameEn !== dev.name && (
+                  <p style={{ fontSize: '13px', color: '#86868B', margin: '0 0 6px', fontWeight: '500' }}>
+                    {dev.nameEn}
+                  </p>
+                )}
+                <a
+                  href={`mailto:${dev.email}`}
+                  style={{
+                    fontSize: '12px',
+                    color: dev.accent,
+                    textDecoration: 'none',
+                    fontWeight: '500',
+                    letterSpacing: '0.01em',
+                    transition: 'opacity 0.2s ease',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.7')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+                >
+                  {dev.email}
+                </a>
+              </div>
+            </div>
+
+            {/* Traits grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                gap: '12px',
+                transform: `translateY(${(1 - slideInFactor) * 16}px)`,
+                opacity: slideInFactor,
+                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.08s, opacity 0.6s ease 0.08s',
+              }}
+            >
+              {dev.traits.map((trait, i) => (
+                <div
+                  key={trait.label}
+                  style={{
+                    padding: '14px 16px',
+                    background: 'rgba(0, 0, 0, 0.025)',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(0, 0, 0, 0.04)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}
+                >
+                  <span style={{ fontSize: '20px', flexShrink: 0 }}>{trait.icon}</span>
+                  <div>
+                    <div style={{ fontSize: '12px', fontWeight: '600', color: '#1D1D1F', marginBottom: '2px' }}>
+                      {trait.label}
+                    </div>
+                    <div style={{ fontSize: '10px', color: '#86868B' }}>{trait.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bio quote */}
+            <div
+              style={{
+                padding: '16px 20px',
                 background: 'rgba(0, 0, 0, 0.025)',
                 borderRadius: '10px',
                 border: '1px solid rgba(0, 0, 0, 0.04)',
+                borderLeft: `3px solid ${dev.accent}`,
                 transform: `translateY(${(1 - slideInFactor) * 16}px)`,
-                opacity: slideInFactor * 0.9,
-                transition: 'transform 0.6s ease 0.3s, opacity 0.6s ease 0.3s',
+                opacity: slideInFactor,
+                transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.16s, opacity 0.6s ease 0.16s',
               }}
             >
-              <div>
-                <p style={{ fontSize: '13px', fontWeight: '600', color: '#1D1D1F', margin: '0 0 2px' }}>
-                  了解更多
-                </p>
-                <p style={{ fontSize: '11px', color: '#86868B', margin: 0 }}>
-                  完整 API 文档 · 插件开发 · 贡献指南
-                </p>
-              </div>
-              <a
-                href="https://docs.pyisland.com"
-                target="_blank"
-                rel="noopener noreferrer"
+              <p
                 style={{
-                  padding: '8px 18px',
-                  background: '#1D1D1F',
-                  color: '#fff',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  fontWeight: '500',
-                  textDecoration: 'none',
-                  letterSpacing: '0.02em',
-                  transition: 'opacity 0.2s ease',
+                  fontSize: '13px',
+                  color: '#1D1D1F',
+                  lineHeight: 1.7,
+                  margin: 0,
+                  fontStyle: 'italic',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
-                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
               >
-                访问文档 →
-              </a>
+                {dev.bio}
+              </p>
             </div>
+
+            {/* Skills */}
+            {dev.skills.length > 0 && (
+              <div
+                style={{
+                  transform: `translateY(${(1 - slideInFactor) * 16}px)`,
+                  opacity: slideInFactor,
+                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.24s, opacity 0.6s ease 0.24s',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: '#86868B',
+                    marginBottom: '10px',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  技术栈
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {dev.skills.map(skill => (
+                    <span
+                      key={skill.label}
+                      style={{
+                        padding: '5px 12px',
+                        background: `${skill.color}15`,
+                        border: `1px solid ${skill.color}30`,
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        color: skill.color,
+                        letterSpacing: '0.02em',
+                      }}
+                    >
+                      {skill.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* macOS Dock */}
+      {/* macOS Dock with developer avatars */}
       <div
         style={{
           position: 'absolute',
@@ -383,77 +486,48 @@ export default function DeveloperContent({ progress, activeView, phase }: Develo
           WebkitBackdropFilter: 'blur(24px)',
           borderRadius: '18px',
           border: '1px solid rgba(255,255,255,0.25)',
-          padding: '4px 8px',
+          padding: '6px 10px',
           display: 'flex',
           alignItems: 'flex-end',
-          gap: '6px',
+          gap: '8px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
           zIndex: 10,
         }}
       >
-        {[
-          { name: 'Finder', emoji: '🗂️', w: 52, h: 52 },
-          { name: 'Safari', emoji: '🧭', w: 52, h: 52 },
-          { name: 'VSCode', emoji: '💻', w: 52, h: 52 },
-          { name: 'Terminal', emoji: '⬛', w: 52, h: 52 },
-          { name: 'Pyisland', emoji: '🟠', w: 52, h: 52 },
-          { name: 'App Store', emoji: '🟦', w: 52, h: 52 },
-          { name: 'Settings', emoji: '⚙️', w: 52, h: 52 },
-        ].map((app) => (
+        {dockAvatars.map((dock, i) => (
           <div
-            key={app.name}
-            title={app.name}
+            key={dock.id}
+            title={dock.name}
+            onClick={() => onSwitchDev(i)}
             style={{
-              width: `${app.w}px`,
-              height: `${app.h}px`,
+              width: '52px',
+              height: '52px',
               borderRadius: '12px',
-              background: app.emoji === '⬛'
-                ? 'linear-gradient(135deg, #1D1D1F, #3a3a3c)'
-                : app.emoji === '🟠'
-                ? 'linear-gradient(135deg, #FF9500, #FF6B00)'
-                : app.emoji === '🟦'
-                ? 'linear-gradient(135deg, #007AFF, #0051D4)'
-                : app.emoji === '💻'
-                ? 'linear-gradient(135deg, #007ACC, #0098FF)'
-                : 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
+              background: dock.gradient,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '24px',
+              fontSize: '20px',
+              fontWeight: '700',
+              color: 'white',
               cursor: 'pointer',
-              border: '1px solid rgba(255,255,255,0.15)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-              transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              border: i === currentDev ? '2px solid white' : '2px solid transparent',
+              boxShadow: i === currentDev
+                ? '0 0 0 2px rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.3)'
+                : '0 2px 8px rgba(0,0,0,0.2)',
+              transform: i === currentDev ? 'scale(1.15) translateY(-4px)' : 'scale(1)',
+              transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border 0.2s ease, box-shadow 0.2s ease',
+              fontFamily: 'ui-monospace, monospace',
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-8px) scale(1.1)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; }}
-          />
-        ))}
-        {/* Separator */}
-        <div style={{ width: '1px', height: '40px', background: 'rgba(255,255,255,0.2)', margin: '0 2px' }} />
-        {[
-          { name: 'Trash', emoji: '🗑️', w: 52, h: 52 },
-        ].map((app) => (
-          <div
-            key={app.name}
-            title={app.name}
-            style={{
-              width: `${app.w}px`,
-              height: `${app.h}px`,
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '24px',
-              cursor: 'pointer',
-              border: '1px solid rgba(255,255,255,0.15)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-              transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            onMouseEnter={e => {
+              if (i !== currentDev) e.currentTarget.style.transform = 'translateY(-8px) scale(1.1)';
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-8px) scale(1.1)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; }}
-          />
+            onMouseLeave={e => {
+              if (i !== currentDev) e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            {dock.letter}
+          </div>
         ))}
       </div>
     </div>

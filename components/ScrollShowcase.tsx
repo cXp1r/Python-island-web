@@ -42,6 +42,8 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
   const [phaseState, setPhaseState] = useState<PhaseState>({ phase: 'idle', targetView: initialView });
   /** Local progress 0→1 for CSS animations */
   const [progress, setProgress] = useState(initialView === 'hero' ? 1 : 1);
+  /** Current developer index in the dock (0-4) */
+  const [currentDev, setCurrentDev] = useState(0);
 
   const threeRef = useRef<ThreeSceneHandle>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -187,6 +189,14 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
     return () => window.removeEventListener('pyisland:navigate', handleNavigate);
   }, [navigateTo]);
 
+  // Switch to a specific developer and show the developers view
+  const switchToDeveloper = useCallback((index: number) => {
+    setCurrentDev(index);
+    if (view !== 'developers') {
+      navigateTo('developers');
+    }
+  }, [view, navigateTo]);
+
   // Wheel scroll
   useEffect(() => {
     let accumulator = 0;
@@ -274,6 +284,8 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
         progress={progress}
         activeView={activeView}
         phase={phaseState.phase}
+        currentDev={currentDev}
+        onSwitchDev={switchToDeveloper}
       />
     </div>
   );
