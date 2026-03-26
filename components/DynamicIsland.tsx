@@ -39,21 +39,20 @@ export default function DynamicIsland() {
 
   useLayoutEffect(() => {
     const updateIndicator = () => {
-      let btn: HTMLButtonElement | null = null;
-      let active = false;
       if (activePage === '#features' && featuresBtnRef.current) {
-        btn = featuresBtnRef.current;
-        active = true;
-      } else if (activePage === '#branches' && branchesBtnRef.current) {
-        btn = branchesBtnRef.current;
-        active = true;
-      }
-      if (btn) {
         setIndicatorStyle({
-          left: btn.offsetLeft + 6,
-          width: btn.offsetWidth - 12,
-          opacity: active ? 1 : 0,
+          left: featuresBtnRef.current.offsetLeft + 6,
+          width: featuresBtnRef.current.offsetWidth - 12,
+          opacity: 1,
         });
+      } else if (activePage === '#branches' && branchesBtnRef.current) {
+        setIndicatorStyle({
+          left: branchesBtnRef.current.offsetLeft + 6,
+          width: branchesBtnRef.current.offsetWidth - 12,
+          opacity: 1,
+        });
+      } else {
+        setIndicatorStyle(prev => ({ ...prev, opacity: 0 }));
       }
     };
     updateIndicator();
