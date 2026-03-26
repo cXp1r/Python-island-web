@@ -12,7 +12,7 @@ export default function ScrollIndicator({ activeView }: ScrollIndicatorProps) {
       aria-hidden="true"
       style={{
         position: 'absolute',
-        bottom: '40px',
+        bottom: '20px',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 3,
@@ -20,7 +20,7 @@ export default function ScrollIndicator({ activeView }: ScrollIndicatorProps) {
         flexDirection: 'column',
         alignItems: 'center',
         gap: '8px',
-        opacity: activeView === 'hero' ? 1 : 0,
+        opacity: (activeView === 'hero' || activeView === 'features') ? 1 : 0,
         pointerEvents: 'none',
         transition: 'opacity 0.4s ease',
       }}
@@ -34,7 +34,7 @@ export default function ScrollIndicator({ activeView }: ScrollIndicatorProps) {
           textTransform: 'uppercase',
         }}
       >
-        向下滚动
+        {activeView === 'features' ? '继续探索' : '向下滚动'}
       </span>
       <div
         style={{
