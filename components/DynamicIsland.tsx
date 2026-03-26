@@ -3,13 +3,18 @@
 import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { Github } from 'lucide-react';
 
+type NavPage = '#hero' | '#features' | '#branches';
+
+const NAV_ORDER: NavPage[] = ['#hero', '#features', '#branches'];
+
 export default function DynamicIsland() {
   const [isHovered, setIsHovered] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [activePage, setActivePage] = useState('');
+  const [activePage, setActivePage] = useState<NavPage>('#hero');
   const featuresBtnRef = useRef<HTMLButtonElement>(null);
   const branchesBtnRef = useRef<HTMLButtonElement>(null);
+  const heroBtnRef = useRef<HTMLButtonElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const navigate = useCallback((hash: string) => {
@@ -19,14 +24,14 @@ export default function DynamicIsland() {
 
   useEffect(() => {
     const updateActivePage = () => {
-      const hash = window.location.hash || '#hero';
+      const hash = (window.location.hash || '#hero') as NavPage;
       setActivePage(hash);
     };
     updateActivePage();
 
     const handleHashChange = () => updateActivePage();
     const handleNavigate = (e: Event) => {
-      setActivePage((e as CustomEvent).detail.hash);
+      setActivePage((e as CustomEvent).detail.hash as NavPage);
     };
 
     window.addEventListener('hashchange', handleHashChange);
@@ -37,9 +42,47 @@ export default function DynamicIsland() {
     };
   }, []);
 
+  // Animate indicator through intermediate steps during cross-page transitions
+  useEffect(() => {
+    let rafId: number | null = null;
+
+    const handleProgress = (e: Event) => {
+      const { progress, target } = (e as CustomEvent<{ progress: number; target: string }>).detail;
+      const targetPage = `#${target}` as NavPage;
+      const currentIdx = NAV_ORDER.indexOf(activePage);
+      const targetIdx = NAV_ORDER.indexOf(targetPage);
+
+      if (currentIdx === -1 || targetIdx === -1 || currentIdx === targetIdx) return;
+
+      const totalSteps = Math.abs(targetIdx - currentIdx);
+      const step = targetIdx > currentIdx ? 1 : -1;
+      const currentStepIdx = currentIdx + Math.floor(progress * totalSteps) * step;
+      const isLastStep = (step > 0 && currentStepIdx >= targetIdx) || (step < 0 && currentStepIdx <= targetIdx);
+
+      const pageToShow: NavPage = isLastStep ? targetPage : NAV_ORDER[Math.max(0, Math.min(NAV_ORDER.length - 1, currentStepIdx))];
+
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setActivePage(pageToShow);
+      });
+    };
+
+    window.addEventListener('pyisland:transition-progress', handleProgress);
+    return () => {
+      window.removeEventListener('pyisland:transition-progress', handleProgress);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [activePage]);
+
   useLayoutEffect(() => {
     const updateIndicator = () => {
-      if (activePage === '#features' && featuresBtnRef.current) {
+      if (activePage === '#hero' && heroBtnRef.current) {
+        setIndicatorStyle({
+          left: heroBtnRef.current.offsetLeft + 6,
+          width: heroBtnRef.current.offsetWidth - 12,
+          opacity: 1,
+        });
+      } else if (activePage === '#features' && featuresBtnRef.current) {
         setIndicatorStyle({
           left: featuresBtnRef.current.offsetLeft + 6,
           width: featuresBtnRef.current.offsetWidth - 12,
@@ -131,6 +174,7 @@ export default function DynamicIsland() {
         >
           {/* Left logo */}
           <button
+            ref={heroBtnRef}
             onClick={() => navigate('#hero')}
             style={{
               display: 'flex',

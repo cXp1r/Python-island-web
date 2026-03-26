@@ -25,11 +25,6 @@ const VIEW_TARGET: Record<ViewState, number> = {
 
 const DURATION = 800;
 
-/**
- * Phase tracks where we are in the transition lifecycle:
- * - idle + view = fully settled in that view
- * - transitioning = animating toward targetView, content should show targetView
- */
 type Phase = 'idle' | 'transitioning';
 interface PhaseState {
   phase: Phase;
@@ -114,37 +109,63 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
     }
   }, [activeView]);
 
+  // Direct cross-page navigation — handles any target jump
+  const navigateTo = useCallback((target: ViewState) => {
+    if (target === view || !VIEW_TARGET[target]) return;
+
+    if (isTransitioning.current) return;
+    isTransitioning.current = true;
+
+    const fromTarget = VIEW_TARGET[view];
+    const toTarget = VIEW_TARGET[target];
+
+    threeRef.current?.setViewTarget(toTarget);
+    setPhaseState({ phase: 'transitioning', targetView: target });
+    setProgress(0);
+
+    let start: number | null = null;
+
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      const t = Math.min(elapsed / DURATION, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+
+      const easedProgress = fromTarget + (toTarget - fromTarget) * eased;
+      threeRef.current?.setTransition(easedProgress);
+      setProgress(eased);
+
+      window.dispatchEvent(new CustomEvent('pyisland:transition-progress', {
+        detail: { progress: eased, target },
+      }));
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setView(target);
+        setPhaseState({ phase: 'idle', targetView: target });
+        setProgress(1);
+        threeRef.current?.setTransition(toTarget);
+        window.dispatchEvent(new CustomEvent('pyisland:transition-progress', {
+          detail: { progress: 1, target },
+        }));
+        isTransitioning.current = false;
+      }
+    };
+    requestAnimationFrame(animate);
+  }, [view]);
+
   // Navigation events from DynamicIsland nav
   useEffect(() => {
     const handleNavigate = (e: Event) => {
       const hash = (e as CustomEvent<{ hash: string }>).detail.hash;
       const target = hash.replace('#', '') as ViewState;
-
-      if (target === activeView || !VIEW_TARGET[target]) return;
-
-      if (VIEW_TARGET[target] > VIEW_TARGET[activeView]) {
-        // Need to go down — may require multiple steps
-        if (activeView === 'hero' && target === 'branches') {
-          threeRef.current?.setViewTarget(0.5);
-          handleTransition('down');
-          setTimeout(() => handleTransition('down'), DURATION + 60);
-        } else {
-          handleTransition('down');
-        }
-      } else {
-        // Need to go up — may require multiple steps
-        if (activeView === 'branches' && target === 'hero') {
-          handleTransition('up');
-          setTimeout(() => handleTransition('up'), DURATION + 60);
-        } else {
-          handleTransition('up');
-        }
-      }
+      navigateTo(target);
     };
 
     window.addEventListener('pyisland:navigate', handleNavigate);
     return () => window.removeEventListener('pyisland:navigate', handleNavigate);
-  }, [activeView, handleTransition]);
+  }, [navigateTo]);
 
   // Wheel scroll
   useEffect(() => {
