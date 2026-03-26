@@ -111,9 +111,12 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
 
   // Direct cross-page navigation — handles any target jump
   const navigateTo = useCallback((target: ViewState) => {
-    if (target === view || !VIEW_TARGET[target]) return;
+    if (VIEW_TARGET[target] === undefined) return;
 
-    if (isTransitioning.current) return;
+    // Always allow navigation to a different page; cancel any in-progress frame first
+    if (isTransitioning.current) {
+      isTransitioning.current = false;
+    }
     isTransitioning.current = true;
 
     const fromTarget = VIEW_TARGET[view];
@@ -124,6 +127,7 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
     setProgress(0);
 
     let start: number | null = null;
+    let rafId: number | null = null;
 
     const animate = (timestamp: number) => {
       if (!start) start = timestamp;
@@ -140,7 +144,7 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
       }));
 
       if (t < 1) {
-        requestAnimationFrame(animate);
+        rafId = requestAnimationFrame(animate);
       } else {
         setView(target);
         setPhaseState({ phase: 'idle', targetView: target });
@@ -152,7 +156,7 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
         isTransitioning.current = false;
       }
     };
-    requestAnimationFrame(animate);
+    rafId = requestAnimationFrame(animate);
   }, [view]);
 
   // Navigation events from DynamicIsland nav
