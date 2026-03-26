@@ -232,16 +232,7 @@ export default function DynamicIsland() {
               cursor: 'pointer',
               flexShrink: 0,
             }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.color = '#fafafa';
-              el.style.background = 'rgba(255, 255, 255, 0.08)';
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.color = '#71717a';
-              el.style.background = 'transparent';
-            }}
+            className="diNavBtn"
           >
             <Github size={16} />
           </a>

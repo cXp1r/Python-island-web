@@ -86,6 +86,7 @@ export default function ScrollShowcase({ children }: ScrollShowcaseProps) {
     const hash = view === 'features' ? '#features' : '#hero';
     if (window.location.hash !== hash) {
       history.replaceState(null, '', window.location.pathname + hash);
+      window.dispatchEvent(new CustomEvent('pyisland:navigate', { detail: { hash } }));
     }
   }, [view]);
 
