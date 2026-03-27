@@ -170,6 +170,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
   // Card switch animation state — tracks what's currently displayed
   const [displayDev, setDisplayDev] = useState(currentDev);
   const [cardVisible, setCardVisible] = useState(true);
+  const [cardHovered, setCardHovered] = useState(false);
 
   // Animate card content on developer switch
   useEffect(() => {
@@ -381,15 +382,21 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
 
         {/* Profile card */}
         <div
+          onMouseEnter={() => setCardHovered(true)}
+          onMouseLeave={() => setCardHovered(false)}
           style={{
             width: '100%',
             background: 'rgba(255, 255, 255, 0.92)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(0, 0, 0, 0.07)',
+            border: `1px solid rgba(0, 0, 0, ${cardHovered ? 0.14 : 0.07})`,
             borderRadius: '16px',
             overflow: 'hidden',
-            boxShadow: '0 8px 48px rgba(0, 0, 0, 0.10), 0 2px 12px rgba(0, 0, 0, 0.06)',
+            boxShadow: cardHovered
+              ? '0 16px 64px rgba(0,0,0,0.16), 0 6px 20px rgba(0,0,0,0.10)'
+              : '0 8px 48px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)',
+            transform: cardHovered ? 'translateY(-6px) scale(1.015)' : 'translateY(0) scale(1)',
+            transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease, border-color 0.3s ease',
           }}
         >
           {/* Window title bar */}
