@@ -303,7 +303,7 @@ export default function DownloadsContent({
         backgroundSize: '400% 400%',
         animation: 'macBgShift 20s ease infinite',
         overflow: 'hidden',
-        paddingTop: '80px',
+        paddingTop: '100px',
       }}
     >
       {/* macOS menu bar */}
