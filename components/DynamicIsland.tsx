@@ -135,7 +135,7 @@ export default function DynamicIsland() {
   const isHero = activePage === '#hero';
   const pageInfo = !isHero ? PAGE_TITLES[activePage] : null;
   const showTitle = !isHero;
-  const isDevelopContrib = activePage === '#develop' || activePage === '#contributors' || activePage === '#download';
+  const isDevelopContrib = activePage === '#develop' || activePage === '#contributors';
   const islandTop = isDevelopContrib ? '52px' : '24px';
   const showBranchSwitcher = activePage === '#develop';
   const showIslandExpanded = showTitle || showBranchSwitcher;
