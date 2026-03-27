@@ -178,7 +178,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
       const t1 = setTimeout(() => {
         setDisplayDev(currentDev);
         setCardVisible(true);
-      }, 280);
+      }, 150);
       return () => clearTimeout(t1);
     }
   }, [currentDev, displayDev]);
@@ -432,8 +432,8 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               opacity: cardVisible ? 1 : 0,
               transform: cardVisible ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.97)',
               transition: cardVisible
-                ? 'opacity 0.38s cubic-bezier(0, 0, 0.2, 1), transform 0.38s cubic-bezier(0, 0, 0.2, 1)'
-                : 'opacity 0.28s cubic-bezier(0.4, 0, 1, 1), transform 0.28s cubic-bezier(0.4, 0, 1, 1)',
+                ? 'opacity 0.2s ease, transform 0.2s ease'
+                : 'opacity 0.15s ease, transform 0.15s ease',
             }}
           >
             {/* Avatar + name + email */}
