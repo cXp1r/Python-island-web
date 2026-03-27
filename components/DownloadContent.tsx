@@ -301,6 +301,28 @@ export default function DownloadContent({
           </div>
         </div>
       </div>
+
+      <div style={{
+        display: 'flex',
+        gap: '12px',
+        marginTop: '32px',
+        paddingBottom: '16px',
+      }}>
+        <button
+          className={stylesButton.btnSecondary}
+          onClick={onBackToContributors}
+          style={{ fontSize: '13px', padding: '9px 20px', fontFamily: 'inherit' }}
+        >
+          ← 返回贡献者
+        </button>
+        <button
+          className={stylesButton.btnSecondary}
+          onClick={() => window.location.href = '/'}
+          style={{ fontSize: '13px', padding: '9px 20px', fontFamily: 'inherit' }}
+        >
+          ← 返回首页
+        </button>
+      </div>
     </div>
   );
 }

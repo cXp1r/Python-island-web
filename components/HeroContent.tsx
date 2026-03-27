@@ -102,7 +102,7 @@ export default function HeroContent({ threeRef, progress, activeView, phase }: H
         >
           <a
             href="/download"
-            className={stylesButton.btnPrimary}
+            className={stylesButton.btnSecondary}
             onMouseEnter={() => threeRef.current?.setHover(true)}
             onMouseLeave={() => threeRef.current?.setHover(false)}
           >
@@ -111,7 +111,7 @@ export default function HeroContent({ threeRef, progress, activeView, phase }: H
           </a>
           <a
             href="/contributors"
-            className={stylesButton.btnSecondary}
+            className={stylesButton.btnPrimary}
             onMouseEnter={() => threeRef.current?.setHover(true)}
             onMouseLeave={() => threeRef.current?.setHover(false)}
           >
