@@ -382,6 +382,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               padding: '16px 16px',
               display: 'flex',
               alignItems: 'center',
+              gap: '8px',
               position: 'relative',
               borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
               background: 'rgba(245, 245, 247, 0.7)',
