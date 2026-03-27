@@ -34,7 +34,6 @@ const downloadData: DownloadItem[] = [
         title: 'pip 安装',
         commands: [
           'pip install pyisland-pyside6',
-          '# 或使用国内镜像',
           'pip install pyisland-pyside6 -i https://pypi.tuna.tsinghua.edu.cn/simple',
         ],
       },
@@ -50,7 +49,6 @@ const downloadData: DownloadItem[] = [
         title: '运行',
         commands: [
           'pyisland',
-          '# 或',
           'python -m pyisland',
         ],
       },
