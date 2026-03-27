@@ -99,21 +99,18 @@ export default function DynamicIsland() {
     updateIndicator();
   }, [activePage]);
 
-  const isHidden = activePage === '#developers';
-
   return (
     <div
       style={{
         position: 'fixed',
         top: '24px',
         left: '50%',
-        transform: `translateX(-50%) translateY(${isHidden ? '-100px' : '0'})`,
+        transform: `translateX(-50%) translateY(${activePage === '#developers' ? '30px' : '0'})`,
         zIndex: 200,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        pointerEvents: isHidden ? 'none' : 'auto',
-        opacity: isHidden ? 0 : 1,
+        opacity: 1,
         transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
       }}
     >
