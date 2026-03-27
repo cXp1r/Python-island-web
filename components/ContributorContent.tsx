@@ -33,9 +33,10 @@ interface ContributorContentProps {
   currentDev: number;
   onSwitchDev: (index: number) => void;
   onBackToDevelop: () => void;
+  onNavigate: (view: ViewState) => void;
 }
 
-export default function ContributorContent({ progress, activeView, phase, currentDev, onSwitchDev, onBackToDevelop }: ContributorContentProps) {
+export default function ContributorContent({ progress, activeView, phase, currentDev, onSwitchDev, onBackToDevelop, onNavigate }: ContributorContentProps) {
   const isContributors = activeView === 'contributors';
   const isTransitioning = phase === 'transitioning';
 
@@ -87,8 +88,10 @@ export default function ContributorContent({ progress, activeView, phase, curren
       e.preventDefault();
 
       if (e.deltaY > 0) {
-        // Scroll down: go to next developer; stop at last
-        if (currentDev < contributors.length - 1) {
+        // Scroll down: at last dev go to download, else next dev
+        if (currentDev === contributors.length - 1) {
+          onNavigate('download');
+        } else {
           onSwitchDev(currentDev + 1);
         }
       } else {
@@ -102,7 +105,7 @@ export default function ContributorContent({ progress, activeView, phase, curren
     };
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [isContributors, phase, currentDev, onSwitchDev, onBackToDevelop, contributors.length]);
+  }, [isContributors, phase, currentDev, onSwitchDev, onBackToDevelop, onNavigate, contributors.length]);
 
   // ── Dock magnify effect ──────────────────────────────────────────────────
   const dockContainerRef = useRef<HTMLDivElement>(null);

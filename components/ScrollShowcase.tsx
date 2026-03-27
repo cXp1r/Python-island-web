@@ -304,6 +304,7 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
         currentDev={currentDev}
         onSwitchDev={switchToContributor}
         onBackToDevelop={() => navigateTo('develop')}
+        onNavigate={navigateTo}
       />
 
       {/* Download */}
