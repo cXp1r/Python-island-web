@@ -251,11 +251,11 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
     if (!container) return;
 
     const rect = container.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
-    // First item center
+    // First item center (accounting for top padding of 14px)
     const firstCenter = 14 + 26; // padding + half icon
-    const idx = Math.round((mouseX - firstCenter) / ITEM_W);
+    const idx = Math.round((mouseY - firstCenter) / ITEM_W);
     const clampedIdx = Math.max(0, Math.min(dockAvatars.length - 1, idx));
 
     const newScales = dockAvatars.map((_, i) => {
@@ -272,7 +272,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
     }
 
     hoveredIdx.current = clampedIdx;
-    lastMouseX.current = mouseX;
+    lastMouseX.current = mouseY;
   }, [currentDev]);
 
   const handleDockMouseLeave = useCallback(() => {
@@ -705,12 +705,12 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
         </div>
       </div>
 
-      {/* macOS Dock with developer avatars */}
+      {/* macOS Dock with developer avatars — vertical, right side */}
       {/*
         Magnify logic:
         - Each avatar tracks its own scale via per-item refs updated on mouse-move.
-        - Active item: always 1.25 scale + lifts 6px.
-        - Hovered item: scales up to 1.20 + lifts 10px.
+        - Active item: always 1.25 scale + shifts -8px (leftward).
+        - Hovered item: scales up + shifts left.
         - Neighbors: scale gradually based on distance (1–3 steps away).
         - On click: triggers a CSS bounce keyframe animation.
       */}
@@ -720,9 +720,9 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
         onMouseLeave={handleDockMouseLeave}
         style={{
           position: 'absolute',
-          bottom: '6px',
-          left: '50%',
-          transform: `translateX(-50%) translateY(${(1 - slideInFactor) * 30}px)`,
+          right: '8px',
+          top: '50%',
+          transform: `translateY(-50%) translateX(${(1 - slideInFactor) * 20}px)`,
           opacity: slideInFactor,
           transition: 'transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s, opacity 0.7s ease 0.4s',
           background: 'rgba(255,255,255,0.12)',
@@ -730,9 +730,10 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
           WebkitBackdropFilter: 'blur(28px)',
           borderRadius: '20px',
           border: '1px solid rgba(255,255,255,0.22)',
-          padding: '8px 14px',
+          padding: '14px 8px',
           display: 'flex',
-          alignItems: 'flex-end',
+          flexDirection: 'column',
+          alignItems: 'center',
           gap: '10px',
           boxShadow: '0 16px 64px rgba(0,0,0,0.45), 0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
           zIndex: 10,
@@ -741,7 +742,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
       >
         {dockAvatars.map((dock, i) => {
           const scale = dockScales.current[i] ?? (i === currentDev ? MAX_SCALE : 1.0);
-          const lift = i === currentDev ? -6 : (scale > 1 ? -Math.round((scale - 1) * 40) : 0);
+          const shiftLeft = i === currentDev ? -8 : (scale > 1 ? -Math.round((scale - 1) * 40) : 0);
           return (
             <div
               key={dock.id}
@@ -753,13 +754,13 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                 position: 'relative',
               }}
             >
-              {/* Name tooltip */}
+              {/* Name tooltip — appears to the left of the avatar */}
               <div
                 style={{
                   position: 'absolute',
-                  bottom: '100%',
-                  left: '50%',
-                  transform: 'translateX(-50%) translateY(-6px)',
+                  right: '100%',
+                  top: '50%',
+                  transform: 'translateY(-50%) translateX(-6px)',
                   background: 'rgba(30,30,30,0.88)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
@@ -774,20 +775,21 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                   transition: 'opacity 0.15s ease',
                   letterSpacing: '0.01em',
+                  marginRight: '10px',
                 }}
               >
                 {dock.name}
                 <div
                   style={{
                     position: 'absolute',
-                    top: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
+                    top: '50%',
+                    left: '100%',
+                    transform: 'translateY(-50%)',
                     width: 0,
                     height: 0,
-                    borderLeft: '5px solid transparent',
-                    borderRight: '5px solid transparent',
-                    borderTop: '5px solid rgba(30,30,30,0.88)',
+                    borderTop: '5px solid transparent',
+                    borderBottom: '5px solid transparent',
+                    borderLeft: '5px solid rgba(30,30,30,0.88)',
                   }}
                 />
               </div>
@@ -809,7 +811,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                     : scale > 1.05
                       ? `0 ${12 - scale * 3}px ${24 - scale * 6}px rgba(0,0,0,${0.3 + (scale - 1) * 0.5}), 0 0 ${Math.round((scale - 1) * 30)}px rgba(255,255,255,0.12)`
                       : '0 3px 10px rgba(0,0,0,0.25)',
-                  transform: `translateY(${lift}px) scale(1)`,
+                  transform: `translateX(${shiftLeft}px) scale(1)`,
                   transition: i === currentDev
                     ? 'width 0.2s cubic-bezier(0.34,1.56,0.64,1), height 0.2s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.2s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s ease, box-shadow 0.2s ease'
                     : 'width 0.18s cubic-bezier(0.34,1.56,0.64,1), height 0.18s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.18s cubic-bezier(0.34,1.56,0.64,1), border-color 0.18s ease, box-shadow 0.18s ease',
@@ -843,7 +845,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
           );
         })}
 
-        {/* Return to branches button */}
+        {/* Return to downloads button */}
         <div
           style={{
             display: 'flex',
@@ -857,9 +859,9 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
           <div
             style={{
               position: 'absolute',
-              bottom: '100%',
-              left: '50%',
-              transform: 'translateX(-50%) translateY(-6px)',
+              right: '100%',
+              top: '50%',
+              transform: 'translateY(-50%) translateX(-6px)',
               background: 'rgba(30,30,30,0.88)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
@@ -874,20 +876,21 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
               transition: 'opacity 0.15s ease',
               letterSpacing: '0.01em',
+              marginRight: '10px',
             }}
           >
             下载界面
             <div
               style={{
                 position: 'absolute',
-                top: '100%',
-                left: '50%',
-                transform: 'translateX(-50%)',
+                top: '50%',
+                left: '100%',
+                transform: 'translateY(-50%)',
                 width: 0,
                 height: 0,
-                borderLeft: '5px solid transparent',
-                borderRight: '5px solid transparent',
-                borderTop: '5px solid rgba(30,30,30,0.88)',
+                borderTop: '5px solid transparent',
+                borderBottom: '5px solid transparent',
+                borderLeft: '5px solid rgba(30,30,30,0.88)',
               }}
             />
           </div>
@@ -904,7 +907,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               cursor: 'pointer',
               border: '2px solid rgba(255,255,255,0.15)',
               boxShadow: '0 3px 10px rgba(0,0,0,0.25)',
-              transform: 'translateY(0px)',
+              transform: 'translateX(0px)',
               transition: 'width 0.18s cubic-bezier(0.34,1.56,0.64,1), height 0.18s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.18s cubic-bezier(0.34,1.56,0.64,1), border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease',
               background: 'rgba(255,255,255,0.15)',
               display: 'flex',
@@ -919,7 +922,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               const el = e.currentTarget;
               el.style.borderColor = 'rgba(255,255,255,0.5)';
               el.style.boxShadow = '0 6px 16px rgba(0,0,0,0.35)';
-              el.style.transform = 'translateY(-3px)';
+              el.style.transform = 'translateX(-3px)';
             }}
             onMouseLeave={e => {
               backBtnHovered.current = false;
@@ -927,7 +930,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               const el = e.currentTarget;
               el.style.borderColor = 'rgba(255,255,255,0.15)';
               el.style.boxShadow = '0 3px 10px rgba(0,0,0,0.25)';
-              el.style.transform = 'translateY(0px)';
+              el.style.transform = 'translateX(0px)';
             }}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
