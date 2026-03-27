@@ -145,14 +145,14 @@ export default function DynamicIsland() {
             background: 'transparent',
             boxShadow: '0 0 0 1px rgba(113, 113, 122, 0.12), 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15)',
             transform: isHovered ? 'scaleX(1.015)' : 'scaleX(1)',
-            transition: 'box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
             ...(isHovered && {
               boxShadow: '0 0 0 1px rgba(113, 113, 122, 0.18), 0 12px 48px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.2)',
             }),
           }}
         />
 
-        {/* Island body — height transitions smoothly between compact and expanded */}
+        {/* Island body — height and width transition smoothly between compact and expanded */}
         <div
           style={{
             position: 'relative',
@@ -166,7 +166,9 @@ export default function DynamicIsland() {
             flexDirection: 'column',
             alignItems: 'center',
             transform: isHovered ? 'scaleX(1.015)' : 'scaleX(1)',
-            transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            minWidth: showTitle ? '380px' : '280px',
+            transformOrigin: 'top center',
+            transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), min-width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
           }}
         >
           {/* Nav row */}
