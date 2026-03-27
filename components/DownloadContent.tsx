@@ -187,13 +187,21 @@ export default function DownloadContent({
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: '24px',
           marginBottom: '32px',
+          maxWidth: '1200px',
+          margin: '0 auto 32px',
         }}>
           {downloadBranches.map((branch, i) => (
             <BranchCard key={branch.id} branch={branch} index={i} />
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '16px',
+          maxWidth: '860px',
+          margin: '0 auto',
+        }}>
           <div className={stylesGlass.glassCard} style={{ padding: '20px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <span style={{
@@ -246,60 +254,6 @@ export default function DownloadContent({
             </ul>
           </div>
         </div>
-
-        <div className={stylesGlass.glassCard} style={{ padding: '20px 24px', marginTop: '16px' }}>
-          <h2 style={{ fontSize: '15px', fontWeight: '700', color: '#1D1D1F', letterSpacing: '-0.02em', marginBottom: '12px' }}>
-            获取帮助
-          </h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-            {[
-              { text: '查看文档', href: 'https://docs.pyisland.com/branches/overview' },
-              { text: '提交 Issue', href: 'https://github.com/Python-island/Python-island/issues' },
-              { text: '加入交流群讨论', href: '#' },
-            ].map((item) => (
-              <a
-                key={item.text}
-                href={item.href}
-                target={item.href.startsWith('http') ? '_blank' : undefined}
-                rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '13px',
-                  color: '#1D1D1F',
-                  textDecoration: 'none',
-                  fontWeight: '500',
-                  transition: 'color 0.2s ease',
-                  padding: '5px 12px',
-                  background: '#F5F5F7',
-                  borderRadius: '6px',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#747478')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#1D1D1F')}
-              >
-                {item.text}
-              </a>
-            ))}
-            <a
-              href="https://github.com/Python-island/Python-island"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={stylesButton.btnSecondary}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontSize: '13px',
-                padding: '5px 14px',
-                textDecoration: 'none',
-                fontFamily: 'inherit',
-              }}
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
       </div>
 
       <div style={{
@@ -307,6 +261,7 @@ export default function DownloadContent({
         gap: '12px',
         marginTop: '32px',
         paddingBottom: '16px',
+        justifyContent: 'center',
       }}>
         <button
           className={stylesButton.btnSecondary}
