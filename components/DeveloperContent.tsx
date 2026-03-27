@@ -188,9 +188,9 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
     const now = new Date();
     const h = now.getHours();
     const m = now.getMinutes().toString().padStart(2, '0');
-    const period = h < 12 ? '上午' : h < 13 ? '下午' : '晚上';
-    const hour = h === 0 ? 12 : h > 12 ? h - 12 : h;
-    return `${period} ${hour}:${m}`;
+    const period = h >= 5 && h < 12 ? '早上' : h >= 12 && h < 18 ? '中午' : '晚上';
+    const displayHour = h.toString().padStart(2, '0');
+    return `${period} ${displayHour}:${m}`;
   };
 
   const [macTime, setMacTime] = useState(getMacTime);
