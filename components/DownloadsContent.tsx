@@ -184,20 +184,45 @@ export default function DownloadsContent({
   const [displayBranch, setDisplayBranch] = useState(0);
   const [branchVisible, setBranchVisible] = useState(true);
   const [copiedLine, setCopiedLine] = useState<number | null>(null);
+  const [terminalContentHeight, setTerminalContentHeight] = useState(0);
+  const contentMeasuredRef = useRef<HTMLDivElement>(null);
 
   const currentData = downloadData[displayBranch];
 
-  // Animate content on branch switch
+  // Measure actual rendered height via ResizeObserver
   useEffect(() => {
-    if (selectedBranch !== displayBranch) {
-      setBranchVisible(false);
-      const t1 = setTimeout(() => {
-        setDisplayBranch(selectedBranch);
-        setBranchVisible(true);
-        setCopiedLine(null);
-      }, 180);
-      return () => clearTimeout(t1);
-    }
+    const el = contentMeasuredRef.current;
+    if (!el) return;
+    const measure = () => {
+      const h = el.getBoundingClientRect().height;
+      if (h > 0) setTerminalContentHeight(h);
+    };
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    measure();
+    return () => ro.disconnect();
+  }, [displayBranch]);
+
+  // Two-phase switch: fade out → switch branch → measure DOM height → fade in
+  useEffect(() => {
+    if (selectedBranch === displayBranch) return;
+    setBranchVisible(false);
+    const t1 = setTimeout(() => {
+      setDisplayBranch(selectedBranch);
+      const t2 = setTimeout(() => {
+        const el = contentMeasuredRef.current;
+        if (!el) return;
+        // Read actual DOM height from new content before expanding
+        requestAnimationFrame(() => {
+          const h = el.getBoundingClientRect().height;
+          setTerminalContentHeight(h > 0 ? h : 300);
+          setBranchVisible(true);
+          setCopiedLine(null);
+        });
+      }, 50);
+      return () => clearTimeout(t2);
+    }, 180);
+    return () => clearTimeout(t1);
   }, [selectedBranch, displayBranch]);
 
   const copyCommand = (cmd: string, lineNum: number) => {
@@ -416,21 +441,30 @@ export default function DownloadsContent({
             </span>
           </div>
 
-          {/* Terminal content — animated on branch switch */}
+          {/* Terminal content — fade + height animated on branch switch */}
           <div
-            key={`terminal-content-${displayBranch}`}
             style={{
-              padding: '20px 24px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px',
-              opacity: branchVisible ? 1 : 0,
-              transform: branchVisible ? 'translateY(0) scale(1)' : 'translateY(-8px) scale(0.98)',
+              maxHeight: branchVisible ? `${terminalContentHeight}px` : '0px',
+              overflow: 'hidden',
               transition: branchVisible
-                ? 'opacity 0.2s ease, transform 0.2s ease'
-                : 'opacity 0.15s ease, transform 0.15s ease',
+                ? 'max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'max-height 0.18s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
+            <div
+              ref={contentMeasuredRef}
+              style={{
+                padding: '20px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px',
+                opacity: branchVisible ? 1 : 0,
+                transform: branchVisible ? 'translateY(0) scale(1)' : 'translateY(-8px) scale(0.98)',
+                transition: branchVisible
+                  ? 'opacity 0.2s ease 0.15s, transform 0.2s ease 0.15s'
+                  : 'opacity 0.15s ease, transform 0.15s ease',
+              }}
+            >
             {/* Branch info */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
               <div
@@ -562,6 +596,7 @@ export default function DownloadsContent({
                 </div>
               </div>
             )}
+          </div>
           </div>
         </div>
 
