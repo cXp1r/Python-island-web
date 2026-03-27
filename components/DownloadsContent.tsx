@@ -214,40 +214,6 @@ export default function DownloadsContent({
           padding: '40px 24px',
         }}
       >
-        {/* Version tabs */}
-        <div
-          style={{
-            display: 'flex',
-            gap: '8px',
-            marginBottom: '24px',
-            transform: `translateY(${(1 - slideInFactor) * -15}px)`,
-            opacity: slideInFactor,
-            transition: 'transform 0.7s ease 0.05s, opacity 0.7s ease 0.05s',
-          }}
-        >
-          {downloadData.map((item, i) => (
-            <button
-              key={item.id}
-              onClick={() => { setSelectedBranch(i); window.dispatchEvent(new CustomEvent('pyisland:branch-select', { detail: i })); }}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '10px',
-                fontSize: '12px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                border: 'none',
-                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                background: displayBranch === i ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.10)',
-                color: displayBranch === i ? '#1D1D1F' : 'rgba(255,255,255,0.7)',
-                boxShadow: displayBranch === i ? '0 4px 16px rgba(0,0,0,0.3)' : 'none',
-                transform: displayBranch === i ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
-              }}
-            >
-              {item.name}
-            </button>
-          ))}
-        </div>
-
         {/* Terminal window */}
         <div
           onMouseEnter={() => setCardHovered(true)}

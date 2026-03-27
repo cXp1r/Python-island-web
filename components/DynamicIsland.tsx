@@ -435,8 +435,7 @@ export default function DynamicIsland() {
                 <button
                   key={item.id}
                   onClick={() => {
-                    setSelectedBranch(i);
-                    window.dispatchEvent(new CustomEvent('pyisland:branch-select', { detail: i }));
+                    window.dispatchEvent(new CustomEvent('pyisland:branch-select', { detail: i, bubbles: false }));
                   }}
                   style={{
                     padding: '5px 12px',
