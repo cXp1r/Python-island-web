@@ -1,5 +1,5 @@
 'use client';
 
-export default function DownloadPage() {
+export default function DevelopPage() {
   return <div />;
 }

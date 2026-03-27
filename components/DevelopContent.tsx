@@ -2,29 +2,29 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { ViewState, Phase } from './types';
-import { downloadData } from '../data/downloadData';
+import { developData } from '../data/developData';
 
-interface DownloadsContentProps {
+interface DevelopContentProps {
   progress: number;
   activeView: ViewState;
   phase: Phase;
   onBackToBranches: () => void;
-  onForwardToDevelopers: () => void;
+  onForwardToContributors: () => void;
 }
 
-export default function DownloadsContent({
+export default function DevelopContent({
   progress,
   activeView,
   phase,
   onBackToBranches,
-  onForwardToDevelopers,
-}: DownloadsContentProps) {
-  const isDownloads = activeView === 'downloads';
+  onForwardToContributors,
+}: DevelopContentProps) {
+  const isDevelop = activeView === 'develop';
   const isTransitioning = phase === 'transitioning';
 
   const slideOut = isTransitioning && activeView === 'branches' ? progress : 0;
-  const opacity = isDownloads ? Math.max(0, 1 - slideOut) : 0;
-  const slideInFactor = isDownloads ? 1 : 0;
+  const opacity = isDevelop ? Math.max(0, 1 - slideOut) : 0;
+  const slideInFactor = isDevelop ? 1 : 0;
 
   const [selectedBranch, setSelectedBranch] = useState(0);
   const [displayBranch, setDisplayBranch] = useState(0);
@@ -34,7 +34,7 @@ export default function DownloadsContent({
   const [cardHovered, setCardHovered] = useState(false);
   const contentMeasuredRef = useRef<HTMLDivElement>(null);
 
-  const currentData = downloadData[displayBranch];
+  const currentData = developData[displayBranch];
 
   // Measure intrinsic content height (scrollHeight is unaffected by maxHeight)
   const measureHeight = useCallback((): number | null => {
@@ -65,16 +65,16 @@ export default function DownloadsContent({
     return () => ro.disconnect();
   }, [handleResize]);
 
-  // On entering downloads view: measure immediately after paint
+  // On entering develop view: measure immediately after paint
   useEffect(() => {
-    if (!isDownloads) return;
+    if (!isDevelop) return;
     requestAnimationFrame(() => {
       const h = measureHeight();
       if (h !== null && h > 0) {
         setTerminalContentHeight(h);
       }
     });
-  }, [isDownloads, measureHeight]);
+  }, [isDevelop, measureHeight]);
 
   // Two-phase switch: fade out → switch branch → measure new height → fade in
   useEffect(() => {
@@ -118,17 +118,17 @@ export default function DownloadsContent({
   }, []);
 
   useEffect(() => {
-    if (!isDownloads) return;
+    if (!isDevelop) return;
     const handleWheel = (e: WheelEvent) => {
       if (phase !== 'idle') return;
       e.preventDefault();
       if (e.deltaY > 0) {
-        if (selectedBranch < downloadData.length - 1) {
+        if (selectedBranch < developData.length - 1) {
           const next = selectedBranch + 1;
           setSelectedBranch(next);
           window.dispatchEvent(new CustomEvent('pyisland:branch-select', { detail: next }));
         } else {
-          onForwardToDevelopers();
+          onForwardToContributors();
         }
       } else {
         if (selectedBranch > 0) {
@@ -142,7 +142,7 @@ export default function DownloadsContent({
     };
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [isDownloads, phase, selectedBranch, onBackToBranches, onForwardToDevelopers]);
+  }, [isDevelop, phase, selectedBranch, onBackToBranches, onForwardToContributors]);
 
   return (
     <div
@@ -154,7 +154,7 @@ export default function DownloadsContent({
         alignItems: 'center',
         justifyContent: 'center',
         opacity,
-        pointerEvents: isDownloads ? 'auto' : 'none',
+        pointerEvents: isDevelop ? 'auto' : 'none',
         transition: 'opacity 0.3s ease',
         zIndex: 4,
         background: 'linear-gradient(160deg, #0a0a0a 0%, #1a1a1a 30%, #2d2d2d 55%, #1a1a1a 75%, #0a0a0a 100%)',
@@ -434,7 +434,7 @@ export default function DownloadsContent({
             transition: 'transform 0.7s ease 0.15s, opacity 0.7s ease 0.15s',
           }}
         >
-          {downloadData.map((item, i) => (
+          {developData.map((item, i) => (
             <button
               key={item.id}
               onClick={() => { setSelectedBranch(i); window.dispatchEvent(new CustomEvent('pyisland:branch-select', { detail: i })); }}
@@ -516,7 +516,7 @@ export default function DownloadsContent({
           </span>
 
           <button
-            onClick={onForwardToDevelopers}
+            onClick={onForwardToContributors}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -540,7 +540,7 @@ export default function DownloadsContent({
               e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
             }}
           >
-            开发者
+            贡献者
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 18 15 12 9 6" />
             </svg>

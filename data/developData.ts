@@ -1,4 +1,4 @@
-export interface DownloadItem {
+export interface DevelopItem {
   id: string;
   name: string;
   tagline: string;
@@ -14,7 +14,7 @@ export interface DownloadItem {
   requirements?: string[];
 }
 
-export const downloadData: DownloadItem[] = [
+export const developData: DevelopItem[] = [
   {
     id: 'pyside6',
     name: 'pyislandPyside6',

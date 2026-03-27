@@ -19,7 +19,7 @@ export interface AnimationState {
 
 export interface TransitionState {
   current: number;
-  /** 0 = hero, 0.33 = features, 0.55 = branches, 0.78 = downloads, 1 = developers */
+  /** 0 = hero, 0.33 = features, 0.55 = branches, 0.78 = develop, 1 = contributors */
   multiViewTarget: number;
 }
 
@@ -39,7 +39,7 @@ export interface SceneRefs {
   mouse: { x: number; y: number };
   hoverRef: React.MutableRefObject<boolean>;
   transitionRef: React.MutableRefObject<number>;
-  /** Raw multi-view target: 0=hero, 0.33=features, 0.55=branches, 0.78=downloads, 1=developers */
+  /** Raw multi-view target: 0=hero, 0.33=features, 0.55=branches, 0.78=develop, 1=contributors */
   viewTargetRef: React.MutableRefObject<number>;
   transitionState: TransitionState;
   hueRef: React.MutableRefObject<number>;

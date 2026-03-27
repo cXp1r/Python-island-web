@@ -9,8 +9,8 @@ import HeroContent from './HeroContent';
 import ScrollIndicator from './ScrollIndicator';
 import FeaturesContent from './FeaturesContent';
 import BranchesContent from './BranchesContent';
-import DownloadsContent from './DownloadsContent';
-import DeveloperContent from './DeveloperContent';
+import DevelopContent from './DevelopContent';
+import ContributorContent from './ContributorContent';
 
 const ThreeScene = dynamic(
   () => import('./ThreeScene').then(m => m.ThreeSceneInner),
@@ -21,8 +21,8 @@ const VIEW_TARGET: Record<ViewState, number> = {
   hero: 0,
   features: 0.33,
   branches: 0.55,
-  downloads: 0.78,
-  developers: 1,
+  develop: 0.78,
+  contributors: 1,
 };
 
 const DURATION = 800;
@@ -61,9 +61,9 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
     const nextViewMap: Record<ViewState, ViewState | null> = {
       hero: direction === 'down' ? 'features' : null,
       features: direction === 'down' ? 'branches' : 'hero',
-      branches: direction === 'down' ? 'downloads' : 'features',
-      downloads: direction === 'down' ? 'developers' : 'branches',
-      developers: direction === 'up' ? 'downloads' : null,
+      branches: direction === 'down' ? 'develop' : 'features',
+      develop: direction === 'down' ? 'contributors' : 'branches',
+      contributors: direction === 'up' ? 'develop' : null,
     };
 
     const nextView = nextViewMap[view];
@@ -192,11 +192,11 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
     return () => window.removeEventListener('pyisland:navigate', handleNavigate);
   }, [navigateTo]);
 
-  // Switch to a specific developer and show the developers view
-  const switchToDeveloper = useCallback((index: number) => {
+  // Switch to a specific contributor and show the contributors view
+  const switchToContributor = useCallback((index: number) => {
     setCurrentDev(index);
-    if (view !== 'developers') {
-      navigateTo('developers');
+    if (view !== 'contributors') {
+      navigateTo('contributors');
     }
   }, [view, navigateTo]);
 
@@ -206,8 +206,8 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
     let timer: ReturnType<typeof setTimeout>;
 
     const handleWheel = (e: WheelEvent) => {
-      // Don't intercept wheel when in developers or downloads view — they handle their own wheel
-      if (view === 'developers' || view === 'downloads') return;
+      // Don't intercept wheel when in contributors or develop view — they handle their own wheel
+      if (view === 'contributors' || view === 'develop') return;
       e.preventDefault();
       accumulator += e.deltaY;
 
@@ -282,25 +282,25 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
         phase={phaseState.phase}
       />
 
-      {/* Downloads */}
-      <DownloadsContent
+      {/* Develop */}
+      <DevelopContent
         progress={progress}
         activeView={activeView}
         phase={phaseState.phase}
         onBackToBranches={() => navigateTo('branches')}
-        onForwardToDevelopers={() => navigateTo('developers')}
+        onForwardToContributors={() => navigateTo('contributors')}
       />
 
       {/* Back button */}
 
-      {/* Developers */}
-      <DeveloperContent
+      {/* Contributors */}
+      <ContributorContent
         progress={progress}
         activeView={activeView}
         phase={phaseState.phase}
         currentDev={currentDev}
-        onSwitchDev={switchToDeveloper}
-        onBackToDownloads={() => navigateTo('downloads')}
+        onSwitchDev={switchToContributor}
+        onBackToDevelop={() => navigateTo('develop')}
       />
     </div>
   );

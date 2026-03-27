@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import DevelopersPageClient from './DevelopersPageClient';
+import ContributorsPageClient from './ContributorsPageClient';
 
 export const metadata: Metadata = {
-  title: '开发者 | Pyisland',
-  description: 'Pyisland 开发者文档、API 参考、插件开发指南。使用 PySide6 或 Tauri 2 构建你的灵动岛。',
+  title: '贡献者 | Pyisland',
+  description: 'Pyisland 贡献者列表。了解为 Python-island 项目贡献代码的团队成员。',
 };
 
-export default function Developers() {
-  return <DevelopersPageClient />;
+export default function Contributors() {
+  return <ContributorsPageClient />;
 }

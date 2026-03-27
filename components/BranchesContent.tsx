@@ -180,8 +180,8 @@ export default function BranchesContent({ progress, activeView, phase }: Branche
   const isBranches = activeView === 'branches';
   const isTransitioning = phase === 'transitioning';
 
-  // Slide-out: when transitioning branches→downloads or branches→developers, branches fades out
-  const slideOut = isTransitioning && (activeView === 'downloads' || activeView === 'developers') ? progress : 0;
+  // Slide-out: when transitioning branches→develop or branches→contributors, branches fades out
+  const slideOut = isTransitioning && (activeView === 'develop' || activeView === 'contributors') ? progress : 0;
 
   const opacity = isBranches ? Math.max(0, 1 - slideOut) : 0;
   const slideInFactor = isBranches ? 1 : 0;

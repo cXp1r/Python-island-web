@@ -1,7 +1,7 @@
-export type ViewState = 'hero' | 'features' | 'branches' | 'downloads' | 'developers';
+export type ViewState = 'hero' | 'features' | 'branches' | 'develop' | 'contributors';
 export type Phase = 'idle' | 'transitioning';
 
-export interface Developer {
+export interface Contributor {
   id: string;
   name: string;
   nameEn: string;

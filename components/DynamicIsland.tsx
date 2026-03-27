@@ -2,17 +2,17 @@
 
 import { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { Github } from 'lucide-react';
-import { downloadData } from '../data/downloadData';
+import { developData } from '../data/developData';
 
-type NavPage = '#hero' | '#features' | '#branches' | '#downloads' | '#developers';
+type NavPage = '#hero' | '#features' | '#branches' | '#develop' | '#contributors';
 
-const NAV_ORDER: NavPage[] = ['#hero', '#features', '#branches', '#downloads', '#developers'];
+const NAV_ORDER: NavPage[] = ['#hero', '#features', '#branches', '#develop', '#contributors'];
 
 const PAGE_TITLES: Record<Exclude<NavPage, '#hero'>, { title: string; subtitle: string }> = {
   '#features': { title: '核心功能', subtitle: '每一个细节都为 Windows 用户精心打造' },
   '#branches': { title: '分支总览', subtitle: '探索 Pyisland 项目的多个分支版本' },
-  '#downloads': { title: '快速安装', subtitle: '选择版本，获取安装命令' },
-  '#developers': { title: '关于开发者', subtitle: 'Python-island 项目团队' },
+  '#develop': { title: '快速安装', subtitle: '选择版本，获取安装命令' },
+  '#contributors': { title: '关于贡献者', subtitle: 'Python-island 项目团队' },
 };
 
 export default function DynamicIsland() {
@@ -21,8 +21,8 @@ export default function DynamicIsland() {
   const [selectedBranch, setSelectedBranch] = useState(0);
   const featuresBtnRef = useRef<HTMLButtonElement>(null);
   const branchesBtnRef = useRef<HTMLButtonElement>(null);
-  const downloadsBtnRef = useRef<HTMLButtonElement>(null);
-  const developersBtnRef = useRef<HTMLButtonElement>(null);
+  const developBtnRef = useRef<HTMLButtonElement>(null);
+  const contributorsBtnRef = useRef<HTMLButtonElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const navigate = useCallback((hash: string) => {
@@ -81,7 +81,7 @@ export default function DynamicIsland() {
     };
   }, [activePage]);
 
-  // Listen for branch-select from DownloadsContent (wheel scroll) to update island visual state
+  // Listen for branch-select from DevelopContent (wheel scroll) to update island visual state
   useEffect(() => {
     const handleBranchSelect = (e: Event) => {
       const idx = (e as CustomEvent<number>).detail;
@@ -105,16 +105,16 @@ export default function DynamicIsland() {
           width: branchesBtnRef.current.offsetWidth - 12,
           opacity: 1,
         });
-      } else if (activePage === '#downloads' && downloadsBtnRef.current) {
+      } else if (activePage === '#develop' && developBtnRef.current) {
         setIndicatorStyle({
-          left: downloadsBtnRef.current.offsetLeft + 6,
-          width: downloadsBtnRef.current.offsetWidth - 12,
+          left: developBtnRef.current.offsetLeft + 6,
+          width: developBtnRef.current.offsetWidth - 12,
           opacity: 1,
         });
-      } else if (activePage === '#developers' && developersBtnRef.current) {
+      } else if (activePage === '#contributors' && contributorsBtnRef.current) {
         setIndicatorStyle({
-          left: developersBtnRef.current.offsetLeft + 6,
-          width: developersBtnRef.current.offsetWidth - 12,
+          left: contributorsBtnRef.current.offsetLeft + 6,
+          width: contributorsBtnRef.current.offsetWidth - 12,
           opacity: 1,
         });
       } else {
@@ -127,9 +127,9 @@ export default function DynamicIsland() {
   const isHero = activePage === '#hero';
   const pageInfo = !isHero ? PAGE_TITLES[activePage] : null;
   const showTitle = !isHero;
-  const isDownloadsDev = activePage === '#downloads' || activePage === '#developers';
-  const islandTop = isDownloadsDev ? '52px' : '24px';
-  const showBranchSwitcher = activePage === '#downloads';
+  const isDevelopContrib = activePage === '#develop' || activePage === '#contributors';
+  const islandTop = isDevelopContrib ? '52px' : '24px';
+  const showBranchSwitcher = activePage === '#develop';
   const showIslandExpanded = showTitle || showBranchSwitcher;
   const islandRadius = showIslandExpanded ? '32px' : '28px';
   const outerRadius = showIslandExpanded ? '36px' : '32px';
@@ -284,14 +284,14 @@ export default function DynamicIsland() {
                 分支
               </button>
               <button
-                ref={downloadsBtnRef}
-                onClick={() => navigate('#downloads')}
+                ref={developBtnRef}
+                onClick={() => navigate('#develop')}
                 style={{
                   padding: '4px 10px',
                   borderRadius: '8px',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: activePage === '#downloads' ? '#ffffff' : '#71717a',
+                  color: activePage === '#develop' ? '#ffffff' : '#71717a',
                   transition: 'color 0.2s ease',
                   cursor: 'pointer',
                   background: 'none',
@@ -299,17 +299,17 @@ export default function DynamicIsland() {
                 }}
                 className="diNavBtn"
               >
-                下载
+                开发
               </button>
               <button
-                ref={developersBtnRef}
-                onClick={() => navigate('#developers')}
+                ref={contributorsBtnRef}
+                onClick={() => navigate('#contributors')}
                 style={{
                   padding: '4px 10px',
                   borderRadius: '8px',
                   fontSize: '13px',
                   fontWeight: '500',
-                  color: activePage === '#developers' ? '#ffffff' : '#71717a',
+                  color: activePage === '#contributors' ? '#ffffff' : '#71717a',
                   transition: 'color 0.2s ease',
                   cursor: 'pointer',
                   background: 'none',
@@ -317,7 +317,7 @@ export default function DynamicIsland() {
                 }}
                 className="diNavBtn"
               >
-                开发者
+                贡献者
               </button>
               {/* Active indicator underline */}
               <div
@@ -410,17 +410,17 @@ export default function DynamicIsland() {
             </span>
           </div>
 
-          {/* Branch switcher row — only visible on #downloads page */}
+          {/* Branch switcher row — only visible on #develop page */}
           <div
             style={{
-              maxHeight: activePage === '#downloads' ? '56px' : '0px',
+              maxHeight: activePage === '#develop' ? '56px' : '0px',
               overflow: 'hidden',
-              opacity: activePage === '#downloads' ? 1 : 0,
+              opacity: activePage === '#develop' ? 1 : 0,
               transition: 'max-height 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              borderTop: activePage === '#downloads' ? '1px solid rgba(255,255,255,0.06)' : 'none',
+              borderTop: activePage === '#develop' ? '1px solid rgba(255,255,255,0.06)' : 'none',
             }}
           >
             <div
@@ -428,12 +428,12 @@ export default function DynamicIsland() {
                 display: 'flex',
                 gap: '6px',
                 padding: '8px 12px',
-                transform: activePage === '#downloads' ? 'translateY(0) scale(1)' : 'translateY(6px) scale(0.95)',
-                opacity: activePage === '#downloads' ? 1 : 0,
+                transform: activePage === '#develop' ? 'translateY(0) scale(1)' : 'translateY(6px) scale(0.95)',
+                opacity: activePage === '#develop' ? 1 : 0,
                 transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease',
               }}
             >
-              {downloadData.map((item, i) => (
+              {developData.map((item, i) => (
                 <div
                   key={item.id}
                   style={{

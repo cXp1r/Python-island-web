@@ -4,13 +4,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import stylesEffect from '@/styles/effect.module.css';
 import stylesDock from '@/styles/dock.module.css';
 import type { ViewState, Phase } from './types';
-import { developers } from '@/data/developerData';
+import { contributors } from '../data/contributorData';
 
 const MAX_SCALE = 1.25;
 const NEIGHBOR_SCALE_STEPS = [1.12, 1.06, 1.0];
 const ITEM_W = 62; // icon width (52) + gap (10)
 
-const dockAvatars = developers.map(dev => {
+const dockAvatars = contributors.map(dev => {
   const avatarMap: Record<string, string> = {
     StarWindv: '/avatar/StarWindv.png',
     Code: '/avatar/code.png',
@@ -26,24 +26,24 @@ const dockAvatars = developers.map(dev => {
   };
 });
 
-interface DeveloperContentProps {
+interface ContributorContentProps {
   progress: number;
   activeView: ViewState;
   phase: Phase;
   currentDev: number;
   onSwitchDev: (index: number) => void;
-  onBackToDownloads: () => void;
+  onBackToDevelop: () => void;
 }
 
-export default function DeveloperContent({ progress, activeView, phase, currentDev, onSwitchDev, onBackToDownloads }: DeveloperContentProps) {
-  const isDevelopers = activeView === 'developers';
+export default function ContributorContent({ progress, activeView, phase, currentDev, onSwitchDev, onBackToDevelop }: ContributorContentProps) {
+  const isContributors = activeView === 'contributors';
   const isTransitioning = phase === 'transitioning';
 
-  const slideOut = isTransitioning && (activeView === 'branches' || activeView === 'downloads') ? progress : 0;
-  const opacity = isDevelopers ? Math.max(0, 1 - slideOut) : 0;
-  const slideInFactor = isDevelopers ? 1 : 0;
+  const slideOut = isTransitioning && (activeView === 'branches' || activeView === 'develop') ? progress : 0;
+  const opacity = isContributors ? Math.max(0, 1 - slideOut) : 0;
+  const slideInFactor = isContributors ? 1 : 0;
 
-  const dev = developers[currentDev];
+  const dev = contributors[currentDev];
   const dockDev = dockAvatars[currentDev];
 
   // Card switch animation state — tracks what's currently displayed
@@ -80,29 +80,29 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
     return () => clearInterval(id);
   }, []);
 
-  // ── Wheel scroll: switch developer when in developers view ─────────────────
+  // ── Wheel scroll: switch developer when in contributors view ─────────────────
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (!isDevelopers || phase !== 'idle') return;
+      if (!isContributors || phase !== 'idle') return;
       e.preventDefault();
 
       if (e.deltaY > 0) {
         // Scroll down: go to next developer; stop at last
-        if (currentDev < developers.length - 1) {
+        if (currentDev < contributors.length - 1) {
           onSwitchDev(currentDev + 1);
         }
       } else {
-        // Scroll up: go to prev developer, or back to downloads at first
+        // Scroll up: go to prev contributor, or back to develop at first
         if (currentDev > 0) {
           onSwitchDev(currentDev - 1);
         } else {
-          onBackToDownloads();
+          onBackToDevelop();
         }
       }
     };
     window.addEventListener('wheel', handleWheel, { passive: false });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [isDevelopers, phase, currentDev, onSwitchDev, onBackToDownloads, developers.length]);
+  }, [isContributors, phase, currentDev, onSwitchDev, onBackToDevelop, contributors.length]);
 
   // ── Dock magnify effect ──────────────────────────────────────────────────
   const dockContainerRef = useRef<HTMLDivElement>(null);
@@ -171,7 +171,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
         alignItems: 'center',
         justifyContent: 'center',
         opacity,
-        pointerEvents: isDevelopers ? 'auto' : 'none',
+        pointerEvents: isContributors ? 'auto' : 'none',
         transition: 'opacity 0.3s ease',
         zIndex: 4,
         background: 'linear-gradient(160deg, #0a0a0a 0%, #1a1a1a 30%, #2d2d2d 55%, #1a1a1a 75%, #0a0a0a 100%)',
@@ -318,7 +318,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               >
                 <img
                   src={dockAvatars[displayDev].avatar}
-                  alt={developers[displayDev].name}
+                  alt={contributors[displayDev].name}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
@@ -333,15 +333,15 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                     letterSpacing: '-0.01em',
                   }}
                 >
-                  {developers[displayDev].name}
+                  {contributors[displayDev].name}
                 </h2>
-                {developers[displayDev].nameEn !== developers[displayDev].name && (
+                {contributors[displayDev].nameEn !== contributors[displayDev].name && (
                   <p style={{ fontSize: '13px', color: '#86868B', margin: '0 0 6px', fontWeight: '500' }}>
-                    {developers[displayDev].nameEn}
+                    {contributors[displayDev].nameEn}
                   </p>
                 )}
                 <a
-                  href={`mailto:${developers[displayDev].email}`}
+                  href={`mailto:${contributors[displayDev].email}`}
                   style={{
                     fontSize: '12px',
                     color: '#555',
@@ -353,7 +353,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                   onMouseEnter={e => (e.currentTarget.style.opacity = '0.6')}
                   onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
-                  {developers[displayDev].email}
+                  {contributors[displayDev].email}
                 </a>
               </div>
             </div>
@@ -363,7 +363,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               className={stylesEffect.cardTraitsSlide}
               style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px' }}
             >
-              {developers[displayDev].traits.map((trait, i) => (
+              {contributors[displayDev].traits.map((trait, i) => (
                 <div
                   key={trait.label}
                   style={{
@@ -422,12 +422,12 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                   fontStyle: 'italic',
                 }}
               >
-                {developers[displayDev].bio}
+                {contributors[displayDev].bio}
               </p>
             </div>
 
             {/* Skills */}
-            {developers[displayDev].skills.length > 0 && (
+            {contributors[displayDev].skills.length > 0 && (
               <div
                 className={stylesEffect.cardSkillsSlide}
               >
@@ -444,7 +444,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
                   技术栈
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                  {developers[displayDev].skills.map(skill => (
+                  {contributors[displayDev].skills.map(skill => (
                     <span
                       key={skill.label}
                       style={{
@@ -479,7 +479,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
             transition: 'transform 0.7s ease 0.15s, opacity 0.7s ease 0.15s',
           }}
         >
-          {developers.map((d, i) => (
+          {contributors.map((d, i) => (
             <button
               key={d.id}
               onClick={() => onSwitchDev(i)}
@@ -526,7 +526,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
           }}
         >
           <button
-            onClick={onBackToDownloads}
+            onClick={onBackToDevelop}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -553,7 +553,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
-            下载
+            开发
           </button>
 
           <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.05em' }}>
@@ -702,7 +702,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
           );
         })}
 
-        {/* Return to downloads button */}
+        {/* Return to develop button */}
         <div
           style={{
             display: 'flex',
@@ -736,7 +736,7 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
               marginRight: '10px',
             }}
           >
-            下载界面
+            开发界面
             <div
               style={{
                 position: 'absolute',
@@ -754,8 +754,8 @@ export default function DeveloperContent({ progress, activeView, phase, currentD
 
           {/* Icon button */}
           <div
-            title="返回下载界面"
-            onClick={onBackToDownloads}
+            title="返回开发界面"
+            onClick={onBackToDevelop}
             style={{
               width: '52px',
               height: '52px',

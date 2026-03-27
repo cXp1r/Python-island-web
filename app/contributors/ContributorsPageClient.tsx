@@ -2,10 +2,10 @@
 
 import ScrollShowcase from '@/components/ScrollShowcase';
 
-export default function DevelopersPageClient() {
+export default function ContributorsPageClient() {
   return (
     <main>
-      <ScrollShowcase initialView="developers" />
+      <ScrollShowcase initialView="contributors" />
     </main>
   );
 }

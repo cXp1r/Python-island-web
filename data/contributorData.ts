@@ -1,6 +1,6 @@
-import type { Developer } from '../components/types';
+import type { Contributor } from '../components/types';
 
-export const developers: Developer[] = [
+export const contributors: Contributor[] = [
   {
     id: 'silenthim',
     name: 'silenthim',
