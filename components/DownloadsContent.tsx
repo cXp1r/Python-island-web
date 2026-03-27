@@ -190,9 +190,9 @@ export default function DownloadsContent({
   const currentData = downloadData[displayBranch];
 
   // Measure intrinsic content height (scrollHeight is unaffected by maxHeight)
-  const measureHeight = useCallback(() => {
+  const measureHeight = useCallback((): number | null => {
     const el = contentMeasuredRef.current;
-    if (!el) return;
+    if (!el) return null;
     // Temporarily reveal so scrollHeight is accurate
     el.style.overflow = 'visible';
     el.style.visibility = 'hidden';
@@ -203,23 +203,29 @@ export default function DownloadsContent({
   }, []);
 
   // Measure via ResizeObserver on content change
+  const handleResize = useCallback(() => {
+    const h = measureHeight();
+    if (h !== null && h > 0) {
+      setTerminalContentHeight(h);
+    }
+  }, [measureHeight]);
+
   useEffect(() => {
     const el = contentMeasuredRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(() => {
-      const h = measureHeight();
-      if (h > 0) setTerminalContentHeight(h);
-    });
+    const ro = new ResizeObserver(handleResize);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [displayBranch, measureHeight]);
+  }, [handleResize]);
 
   // On entering downloads view: measure immediately after paint
   useEffect(() => {
     if (!isDownloads) return;
     requestAnimationFrame(() => {
       const h = measureHeight();
-      if (h > 0) setTerminalContentHeight(h);
+      if (h !== null && h > 0) {
+        setTerminalContentHeight(h);
+      }
     });
   }, [isDownloads, measureHeight]);
 
@@ -231,7 +237,7 @@ export default function DownloadsContent({
       setDisplayBranch(selectedBranch);
       const t2 = setTimeout(() => {
         const h = measureHeight();
-        setTerminalContentHeight(h > 0 ? h : 300);
+        setTerminalContentHeight(h !== null && h > 0 ? h : 300);
         setBranchVisible(true);
         setCopiedLine(null);
       }, 60);
