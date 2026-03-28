@@ -193,7 +193,13 @@ export default function DevelopContent({
           </span>
         ))}
         <div style={{ flex: 1 }} />
-        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', letterSpacing: '0.02em' }}>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="rgba(255,255,255,0.85)">
+          <path d="M1 4C1 2.9 1.9 2 3 2h8c1.1 0 2 .9 2 2v4c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V4zm0-1L0 3v4l1-1h12l1 1V3l-1 0H1z" />
+          <path d="M4 5h6M4 7h3" stroke="rgba(255,255,255,0.7)" strokeWidth="1" fill="none" />
+        </svg>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)', letterSpacing: '0.01em' }}>▼</span>
+        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.85)' }}>100%</span>
+        <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.02em' }}>
           {macTime}
         </span>
       </div>
