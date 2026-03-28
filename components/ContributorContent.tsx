@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import stylesEffect from '@/styles/effect.module.css';
 import stylesDock from '@/styles/dock.module.css';
-import type { ViewState, Phase } from './types';
+import type { ViewState } from '@/data/viewState';
+import type { Phase } from '@/data/phase';
 import { contributors } from '../data/contributorData';
 
 const MAX_SCALE = 1.25;

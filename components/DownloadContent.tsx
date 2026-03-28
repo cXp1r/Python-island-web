@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { ViewState, Phase } from './types';
+import type { ViewState } from '@/data/viewState';
+import type { Phase } from '@/data/phase';
 import { downloadBranches } from '@/data/downloadData';
 
 interface DownloadContentProps {

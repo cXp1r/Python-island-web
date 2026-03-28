@@ -1,4 +1,4 @@
-import type { Contributor } from '../components/types';
+import type { Contributor } from '@/data/types';
 
 export const contributors: Contributor[] = [
   {

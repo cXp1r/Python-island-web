@@ -4,7 +4,8 @@ import { useState, useRef, useEffect, useCallback, ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { ComponentType } from 'react';
 import type { ThreeSceneHandle } from './ThreeScene';
-import type { ViewState, Phase } from './types';
+import type { ViewState } from '../data/viewState';
+import type { Phase } from '../data/phase';
 import HeroContent from './HeroContent';
 import ScrollIndicator from './ScrollIndicator';
 import FeaturesContent from './FeaturesContent';
@@ -45,7 +46,7 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
   /** Phase + target during transition */
   const [phaseState, setPhaseState] = useState<PhaseState>({ phase: 'idle', targetView: initialView });
   /** Local progress 0→1 for CSS animations */
-  const [progress, setProgress] = useState(initialView === 'hero' ? 1 : 1);
+  const [progress, setProgress] = useState(1);
   /** Current developer index in the dock (0-4) */
   const [currentDev, setCurrentDev] = useState(0);
 
@@ -182,8 +183,6 @@ export default function ScrollShowcase({ children, initialView = 'hero' }: Scrol
     };
     transitionRafRef.current = requestAnimationFrame(animate);
   }, [view]);
-
-  // Navigation events from DynamicIsland nav
   useEffect(() => {
     const handleNavigate = (e: Event) => {
       const hash = (e as CustomEvent<{ hash: string }>).detail.hash;

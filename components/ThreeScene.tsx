@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { createScene, addLights, createIslandGroup, createOuterGlowLayers, createCoreGlow, createParticles, createMouseTracker, createAnimationState, GlowLayer } from '@/lib/three/createElements';
 import { createAnimationLoop, AnimationState, SceneElements, SceneRefs, TransitionState } from '@/lib/three/animate';
 import type { ThreeSceneHandle } from '@/lib/three/types';
-import type { ViewState } from './types';
+import type { ViewState } from '@/data/viewState';
 export type { ThreeSceneHandle } from '@/lib/three/types';
 
 interface ThreeSceneInnerProps {

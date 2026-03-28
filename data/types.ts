@@ -1,6 +1,3 @@
-export type ViewState = 'hero' | 'features' | 'branches' | 'develop' | 'contributors' | 'download';
-export type Phase = 'idle' | 'transitioning';
-
 export interface Contributor {
   id: string;
   name: string;

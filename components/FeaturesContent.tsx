@@ -9,7 +9,8 @@ import {
   Move,
 } from 'lucide-react';
 import stylesGlass from '@/styles/glass.module.css';
-import type { ViewState, Phase } from './types';
+import type { ViewState } from '@/data/viewState';
+import type { Phase } from '@/data/phase';
 
 const features = [
   {
