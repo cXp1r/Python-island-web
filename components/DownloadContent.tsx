@@ -287,42 +287,6 @@ export default function DownloadContent({
                 </p>
               </div>
 
-              {/* Label badge */}
-              <div style={{
-                width: '52px',
-                height: '52px',
-                borderRadius: '12px',
-                background: `linear-gradient(135deg, ${branch.accentBg} 0%, rgba(255,255,255,0.04) 100%)`,
-                border: `1px solid ${branch.accentBorder}`,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: cardHovered ? `0 0 28px ${colors.glow}` : 'none',
-                transition: 'box-shadow 0.4s ease',
-              }}>
-                <span style={{
-                  fontSize: '13px',
-                  fontWeight: '900',
-                  color: branch.accentColor,
-                  letterSpacing: '-0.01em',
-                  fontFamily: "'JetBrains Mono', 'Courier New', monospace",
-                  lineHeight: 1,
-                }}>
-                  {branch.label}
-                </span>
-                <div style={{ width: '18px', height: '1px', background: `${branch.accentBorder}`, margin: '3px 0' }} />
-                <span style={{
-                  fontSize: '7px',
-                  fontWeight: '700',
-                  color: `${branch.accentColor}88`,
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                }}>
-                  {branch.tagline.slice(0, 2)}
-                </span>
-              </div>
             </div>
 
             {/* Feature list */}
@@ -333,10 +297,10 @@ export default function DownloadContent({
                     width: '5px',
                     height: '5px',
                     borderRadius: '50%',
-                    background: branch.accentColor,
+                    background: branch.accentColor === '#FFFFFF' ? 'rgba(255,255,255,0.7)' : branch.accentColor,
                     flexShrink: 0,
                     marginTop: '6px',
-                    boxShadow: cardHovered ? `0 0 8px ${branch.accentColor}90` : 'none',
+                    boxShadow: cardHovered ? `0 0 8px ${branch.accentColor === '#FFFFFF' ? 'rgba(255,255,255,0.5)' : branch.accentColor + '90'}` : 'none',
                     transition: 'box-shadow 0.3s ease',
                   }} />
                   <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.50)', lineHeight: 1.55 }}>
@@ -374,12 +338,16 @@ export default function DownloadContent({
                     fontWeight: '700',
                     cursor: 'pointer',
                     border: 'none',
-                    background: `linear-gradient(135deg, ${branch.accentColor} 0%, ${branch.accentColor}bb 100%)`,
-                    color: '#fff',
+                    background: branch.accentColor === '#FFFFFF'
+                      ? 'rgba(255,255,255,0.95)'
+                      : `linear-gradient(135deg, ${branch.accentColor} 0%, ${branch.accentColor}bb 100%)`,
+                    color: branch.accentColor === '#FFFFFF' ? '#1D1D1F' : '#fff',
                     fontFamily: 'inherit',
                     letterSpacing: '0.05em',
                     transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    boxShadow: `0 6px 24px ${branch.accentColor}60, inset 0 1px 0 rgba(255,255,255,0.25)`,
+                    boxShadow: branch.accentColor === '#FFFFFF'
+                      ? '0 6px 24px rgba(255,255,255,0.20), inset 0 1px 0 rgba(255,255,255,0.50)'
+                      : `0 6px 24px ${branch.accentColor}60, inset 0 1px 0 rgba(255,255,255,0.25)`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -387,11 +355,15 @@ export default function DownloadContent({
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.transform = 'scale(1.025)';
-                    e.currentTarget.style.boxShadow = `0 10px 36px ${branch.accentColor}90, inset 0 1px 0 rgba(255,255,255,0.35)`;
+                    e.currentTarget.style.boxShadow = branch.accentColor === '#FFFFFF'
+                      ? '0 10px 36px rgba(255,255,255,0.35), inset 0 1px 0 rgba(255,255,255,0.60)'
+                      : `0 10px 36px ${branch.accentColor}90, inset 0 1px 0 rgba(255,255,255,0.35)`;
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = `0 6px 24px ${branch.accentColor}60, inset 0 1px 0 rgba(255,255,255,0.25)`;
+                    e.currentTarget.style.boxShadow = branch.accentColor === '#FFFFFF'
+                      ? '0 6px 24px rgba(255,255,255,0.20), inset 0 1px 0 rgba(255,255,255,0.50)'
+                      : `0 6px 24px ${branch.accentColor}60, inset 0 1px 0 rgba(255,255,255,0.25)`;
                   }}
                   aria-label={`下载 ${branch.name}`}
                 >
