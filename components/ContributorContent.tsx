@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import stylesEffect from '@/styles/effect.module.css';
-import stylesDock from '@/styles/dock.module.css';
 import DesktopIcons from './DesktopIcons';
 import type { ViewState } from '@/data/viewState';
 import type { Phase } from '@/data/phase';
@@ -111,7 +110,6 @@ export default function ContributorContent({ progress, activeView, phase, curren
   // ── Dock magnify effect ──────────────────────────────────────────────────
   const dockContainerRef = useRef<HTMLDivElement>(null);
   const dockScales = useRef<number[]>(dockAvatars.map((_, i) => (i === currentDev ? MAX_SCALE : 1.0)));
-  const dockBounce = useRef<boolean[]>(dockAvatars.map(() => false));
   const [, forceUpdate] = useState(0);
   const lastMouseX = useRef<number | null>(null);
   /** Index of the item the mouse is directly over */
@@ -686,7 +684,6 @@ export default function ContributorContent({ progress, activeView, phase, curren
               <div
                 title={dock.name}
                 onClick={() => onSwitchDev(i)}
-                className={dockBounce.current[i] ? stylesDock.bounce : ''}
                 style={{
                   width: `${52 * scale}px`,
                   height: `${52 * scale}px`,
@@ -703,12 +700,6 @@ export default function ContributorContent({ progress, activeView, phase, curren
                   transition: i === currentDev
                     ? 'width 0.2s cubic-bezier(0.34,1.56,0.64,1), height 0.2s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.2s cubic-bezier(0.34,1.56,0.64,1), border-color 0.2s ease, box-shadow 0.2s ease'
                     : 'width 0.18s cubic-bezier(0.34,1.56,0.64,1), height 0.18s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.18s cubic-bezier(0.34,1.56,0.64,1), border-color 0.18s ease, box-shadow 0.18s ease',
-                }}
-                onAnimationEnd={() => {
-                  if (dockBounce.current[i]) {
-                    dockBounce.current[i] = false;
-                    forceUpdate(n => n + 1);
-                  }
                 }}
               >
                 <img

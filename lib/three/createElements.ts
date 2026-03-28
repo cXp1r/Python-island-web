@@ -151,53 +151,6 @@ export function createOuterGlowLayers(group: THREE.Group): GlowLayer[] {
 }
 
 /**
- * Create orbit rings
- */
-export function createOrbitRings(group: THREE.Group): THREE.Mesh[] {
-  const { radii, colors, opacities, rotations } = SCENE_CONFIG.orbitRings;
-  const rings: THREE.Mesh[] = [];
-  
-  radii.forEach((radius, i) => {
-    const mat = new THREE.MeshBasicMaterial({
-      color: colors[i],
-      transparent: true,
-      opacity: opacities[i],
-    });
-    
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(
-        radius,
-        SCENE_CONFIG.orbitRings.tubeRadius,
-        SCENE_CONFIG.orbitRings.tubeSegments,
-        SCENE_CONFIG.orbitRings.radialSegments
-      ),
-      mat
-    );
-    
-    ring.rotation.set(rotations[i].x, rotations[i].y, rotations[i].z);
-    group.add(ring);
-    rings.push(ring);
-  });
-  
-  return rings;
-}
-
-/**
- * Create floating accent dots
- */
-export function createFloatingDots(group: THREE.Group): void {
-  const { colors, baseSize, sizeIncrement, segments, positions } = SCENE_CONFIG.floatingDots;
-  
-  positions.forEach((pos, i) => {
-    const geo = new THREE.SphereGeometry(baseSize + (i % 3) * sizeIncrement, segments, segments);
-    const mat = new THREE.MeshBasicMaterial({ color: colors[i % 3] });
-    const dot = new THREE.Mesh(geo, mat);
-    dot.position.set(pos[0], pos[1], pos[2]);
-    group.add(dot);
-  });
-}
-
-/**
  * Create core glow sphere
  */
 export function createCoreGlow(group: THREE.Group): THREE.MeshBasicMaterial {

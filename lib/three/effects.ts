@@ -43,54 +43,12 @@ export function getBreathFactor(time: number, speed: number, phase: number = 0, 
 }
 
 /**
- * Get the transition factor for hover effect (0 = neutral, 1 = full rainbow)
- */
-export function getTransitionFactor(
-  current: number,
-  target: number,
-  smoothing: number
-): number {
-  return current + (target - current) * smoothing;
-}
-
-/**
- * Create a color that interpolates between neutral and rainbow based on transition factor
- */
-export function getInterpolatedColor(
-  neutralColor: number,
-  baseHue: number,
-  saturation: number,
-  lightness: number,
-  transitionFactor: number
-): THREE.Color {
-  const neutral = new THREE.Color(neutralColor);
-  const rainbow = new THREE.Color().setHSL(baseHue / 360, saturation, lightness);
-  return lerpColor(neutral, rainbow, transitionFactor);
-}
-
-/**
- * Interpolate opacity between neutral and hover states
- */
-export function getInterpolatedOpacity(
-  neutralOpacity: number,
-  hoverOpacity: number,
-  breathAmount: number,
-  time: number,
-  breathSpeed: number,
-  transitionFactor: number
-): number {
-  const breath = Math.sin(time * breathSpeed) * breathAmount;
-  const targetOpacity = hoverOpacity + breath;
-  return lerp(neutralOpacity, targetOpacity, transitionFactor);
-}
-
-/**
  * Calculate neutral color for outer glow layers (based on theme colors)
  */
 export function getNeutralGlowColor(time: number, phase: number, themeColors: readonly number[]): THREE.Color {
   const colorShift = Math.sin(time * 0.25 + phase * 0.5);
   const t = (colorShift + 1) / 2;
-  
+
   const color0 = themeColors[0];
   const color2 = themeColors[2];
   const r0 = (color0 >> 16) & 0xff;
@@ -99,11 +57,11 @@ export function getNeutralGlowColor(time: number, phase: number, themeColors: re
   const r1 = (color2 >> 16) & 0xff;
   const g1 = (color2 >> 8) & 0xff;
   const b1 = color2 & 0xff;
-  
+
   const r = Math.round(r0 * (1 - t) + r1 * t) / 255;
   const g = Math.round(g0 * (1 - t) + g1 * t) / 255;
   const b = Math.round(b0 * (1 - t) + b1 * t) / 255;
-  
+
   return new THREE.Color(r, g, b);
 }
 
@@ -113,33 +71,15 @@ export function getNeutralGlowColor(time: number, phase: number, themeColors: re
 export function getRainbowGlowColor(
   baseHue: number,
   index: number,
-  time: number
+  time: number,
 ): { color: THREE.Color; hueOffset: number; saturation: number; lightness: number } {
   const { hueOffsetBase, hueOffsetVariance, saturationBase, saturationVariance, lightnessBase, lightnessVariance } = SCENE_CONFIG.rainbow.outerGlow;
-  
+
   const hueOffset = index * hueOffsetBase + Math.sin(time * 0.5 + index * 0.3) * hueOffsetVariance;
   const saturation = saturationBase + Math.sin(time * 1.0 + index * 0.5) * saturationVariance;
   const lightness = lightnessBase + Math.sin(time * 1.2 + index * 0.4) * lightnessVariance;
-  
-  const color = new THREE.Color().setHSL((baseHue + hueOffset) / 360, saturation, lightness);
-  
-  return { color, hueOffset, saturation, lightness };
-}
 
-/**
- * Get rainbow color for orbit rings
- */
-export function getRainbowRingColor(
-  baseHue: number,
-  index: number,
-  time: number
-): { color: THREE.Color; saturation: number } {
-  const { hueOffsetBase, hueOffsetVariance, saturationBase, saturationVariance } = SCENE_CONFIG.rainbow.rings;
-  
-  const hueOffset = index * 40 + hueOffsetBase + Math.sin(time * 0.5 + index * 0.3) * hueOffsetVariance;
-  const saturation = saturationBase + Math.sin(time * 1.0 + index) * saturationVariance;
-  
-  const color = new THREE.Color().setHSL((baseHue + hueOffset) / 360, saturation, 0.6);
-  
-  return { color, saturation };
+  const color = new THREE.Color().setHSL((baseHue + hueOffset) / 360, saturation, lightness);
+
+  return { color, hueOffset, saturation, lightness };
 }

@@ -7,21 +7,6 @@
   background-clip: text;
 }
 
-.gradientTextAccent {
-  background: linear-gradient(135deg, #1D1D1F, #86868B, #A1A1A6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.glowAccent {
-  box-shadow: 0 0 40px rgba(29, 29, 31, 0.06), 0 0 80px rgba(29, 29, 31, 0.04);
-}
-
-.glowBorder {
-  box-shadow: inset 0 0 20px rgba(29, 29, 31, 0.04), 0 0 20px rgba(29, 29, 31, 0.04);
-}
-
 /* ── Hero staggered entrance animations ──────────────────────────────────── */
 
 @keyframes heroSubtitleIn {
@@ -88,36 +73,6 @@
 }
 
 /* ── Developer card content fade transitions ──────────────────────────────── */
-
-@keyframes cardContentFadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.97);
-  }
-}
-
-@keyframes cardContentFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.cardContentFadeOut {
-  animation: cardContentFadeOut 0.28s cubic-bezier(0.4, 0, 1, 1) both;
-}
-
-.cardContentFadeIn {
-  animation: cardContentFadeIn 0.38s cubic-bezier(0, 0, 0.2, 1) both;
-}
 
 /* Individual element slide-up on card switch */
 @keyframes cardItemSlideUp {

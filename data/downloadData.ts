@@ -1,5 +1,3 @@
-import stylesBadge from '@/styles/badge.module.css';
-
 export interface DownloadBranch {
   id: string;
   name: string;
@@ -10,7 +8,6 @@ export interface DownloadBranch {
   downloadUrl: string;
   downloadLabel: string;
   badge: string;
-  badgeClass: string;
   accentColor: string;
   accentBg: string;
   accentBorder: string;
@@ -33,7 +30,6 @@ export const downloadBranches: DownloadBranch[] = [
     downloadUrl: 'https://download.pyisland.com/download/DynamicIsland_0.2.0_x64-setup.exe',
     downloadLabel: '立即下载',
     badge: '高性能',
-    badgeClass: stylesBadge.badgeGreen,
     accentColor: '#059669',
     accentBg: 'rgba(5, 150, 105, 0.08)',
     accentBorder: 'rgba(5, 150, 105, 0.25)',
@@ -54,7 +50,6 @@ export const downloadBranches: DownloadBranch[] = [
     downloadUrl: 'https://docs.pyisland.com/download.html',
     downloadLabel: '即将推出',
     badge: '轻量版',
-    badgeClass: stylesBadge.badgeAmber,
     accentColor: '#D97706',
     accentBg: 'rgba(217, 119, 6, 0.08)',
     accentBorder: 'rgba(217, 119, 6, 0.25)',
@@ -75,7 +70,6 @@ export const downloadBranches: DownloadBranch[] = [
     downloadUrl: 'https://download.pyisland.com/download/Pyisland_V1.6.1.exe',
     downloadLabel: '立即下载',
     badge: '稳定版',
-    badgeClass: stylesBadge.badgeAccent,
     accentColor: '#FFFFFF',
     accentBg: 'rgba(255, 255, 255, 0.08)',
     accentBorder: 'rgba(255, 255, 255, 0.20)',
@@ -96,7 +90,6 @@ export const downloadBranches: DownloadBranch[] = [
     downloadUrl: 'https://docs.pyisland.com/download.html',
     downloadLabel: '即将推出',
     badge: '美化版',
-    badgeClass: stylesBadge.badgeAccent,
     accentColor: '#FACC15',
     accentBg: 'rgba(250, 204, 21, 0.08)',
     accentBorder: 'rgba(250, 204, 21, 0.25)',

@@ -111,7 +111,7 @@ export default function HeroContent({ threeRef, progress, activeView, phase }: H
             立即下载
           </a>
           <a
-            href="/contributors"
+            href="/"
             className={stylesButton.btnPrimary}
             onMouseEnter={() => threeRef.current?.setHover(true)}
             onMouseLeave={() => threeRef.current?.setHover(false)}

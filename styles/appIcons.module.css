@@ -1,4 +1,4 @@
-/* macOS Dock bounce animation */
+/* Desktop icon bounce animation */
 @keyframes appBounce {
   0%   { transform: scale(1) translateY(0px); }
   20%  { transform: scale(1.32) translateY(-14px); }
