@@ -39,6 +39,7 @@ type Branch = typeof downloadBranches[number];
  * @description 定义各分支的发光颜色和暗光颜色
  */
 const BRANCH_COLORS: Record<string, { glow: string; glowDim: string }> = {
+  'eisland':    { glow: 'rgba(37,99,235,0.28)',   glowDim: 'rgba(37,99,235,0.10)' },
   'tauri-island':    { glow: 'rgba(5,150,105,0.28)',   glowDim: 'rgba(5,150,105,0.10)' },
   'pyislandqt':      { glow: 'rgba(217,119,6,0.26)',   glowDim: 'rgba(217,119,6,0.10)' },
   'pyislandpyside6': { glow: 'rgba(100,116,139,0.26)', glowDim: 'rgba(100,116,139,0.10)' },

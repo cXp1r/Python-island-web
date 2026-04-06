@@ -40,6 +40,26 @@ export interface DownloadBranch {
 
 export const downloadBranches: DownloadBranch[] = [
   {
+    id: 'eisland',
+    name: 'eisland',
+    tagline: '多功能',
+    description: '基于 electron + react 实现',
+    features: [
+      '性能强悍',
+      '功能强大',
+      '兼容性好',
+      '动效美观',
+    ],
+    audience: '追求多功能和高性能的用户',
+    downloadUrl: 'https://download.pyisland.com/download/eIsland-26.1.0-Setup.exe',
+    downloadLabel: '立即下载',
+    badge: '高性能',
+    accentColor: '#2563EB',
+    accentBg: 'rgba(37, 99, 235, 0.10)',
+    accentBorder: 'rgba(59, 130, 246, 0.30)',
+    label: 'T2',
+  },
+  {
     id: 'tauri-island',
     name: 'tauri-island',
     tagline: '高性能',
