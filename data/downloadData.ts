@@ -40,6 +40,26 @@ export interface DownloadBranch {
 
 export const downloadBranches: DownloadBranch[] = [
   {
+    id: 'eisland',
+    name: 'eisland',
+    tagline: '旗舰版',
+    description: '基于 Electron + React 构建的桌面灵动岛，集成完整 UI 框架与交互系统',
+    features: [
+      'Web 技术栈，开发迭代效率高',
+      '功能模块化，扩展性强',
+      'Windows / macOS / Linux 全平台兼容',
+      '成熟开源生态，依赖维护活跃',
+    ],
+    audience: '追求功能完整、开源可控、跨平台体验的用户',
+    downloadUrl: 'https://download.pyisland.com/download/eIsland-26.1.0-Setup.exe',
+    downloadLabel: '立即下载',
+    badge: '旗舰版',
+    accentColor: '#2563EB',
+    accentBg: 'rgba(37, 99, 235, 0.10)',
+    accentBorder: 'rgba(59, 130, 246, 0.30)',
+    label: 'T2',
+  },
+  {
     id: 'tauri-island',
     name: 'tauri-island',
     tagline: '高性能',
@@ -91,7 +111,7 @@ export const downloadBranches: DownloadBranch[] = [
       '社区支持完善，文档齐全',
     ],
     audience: '追求稳定可靠的用户',
-    downloadUrl: 'https://download.pyisland.com/download/Pyisland_V1.6.1.exe',
+    downloadUrl: 'https://download.pyisland.com/download/PyIsland_1.7.1_x64.zip',
     downloadLabel: '立即下载',
     badge: '稳定版',
     accentColor: '#FFFFFF',
