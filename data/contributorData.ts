@@ -54,7 +54,7 @@ export const contributors: Contributor[] = [
     name: '星灿长风v',
     nameEn: 'StarWindv',
     dockLabel: '星灿长风v',
-    email: 'starwindv.stv@gmail.com',
+    email: 'starwindv@mail.starwindv.top',
     bio: 'ISTP/INTP 社恐金牛 | 擅长使用 Py/Java/Rust/Ts | 喜欢花里胡哨的东西和更底层的原理 | 热衷于自己造轮子来进行学习',
     traits: [
       { icon: '/', label: 'ISTP / INTP', desc: '理性工匠 · 逻辑思考' },
@@ -117,7 +117,7 @@ export const contributors: Contributor[] = [
     name: 'cXp1r',
     nameEn: 'CXP1R',
     dockLabel: 'cXp1r',
-    email: 'admin@cxp1r.com',
+    email: 'cxp1r@nailong.com',
     bio: '社恐小男孩，擅长摸鱼和提建议，喜欢将流程自动化，喜欢 C++ 和 Python',
     traits: [
       { icon: '/', label: '社恐小男孩', desc: '安静但有想法' },
@@ -137,7 +137,7 @@ export const contributors: Contributor[] = [
     nameEn: 'JNTMTMTM',
     dockLabel: '鸡哥',
     email: 'JNTMTMTM@nailong.com',
-    bio: '南京最后的全栈工程师',
+    bio: '南京最后的全栈工程师 (eisland 问题请跟我反馈 不要骚扰别人)',
     traits: [
       { icon: '/', label: '保持神秘_0', desc: '404 NOT FOUND' },
       { icon: '/', label: '保持神秘_1', desc: '404 NOT FOUND' },
